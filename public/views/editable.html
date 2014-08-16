@@ -1,4 +1,5 @@
-<div ng-hide="supp === selected">
+<!--<button ng-click="setEdit()">change data</button>-->
+<div ng-hide="supp === itemToEdit" ng-click="setEdit(supp)">
     <h3 >{{supp.name}}</h3>
     <ul>
         <li>Description: {{supp.description}}</li>
@@ -11,11 +12,11 @@
         <li ng-repeat="benefit in supp.benefits">{{benefit}}</li>
     </ul>
 </div>
-<div ng-show="supp === selected">
+<div ng-click="setEdit()" ng-show="supp === itemToEdit"> 
     <div>
-        <button type="button" class="btn btn-danger pull-right" ng-click="deleteSupp(supp)">
+        <button type="button" class="btn btn-danger pull-right" ng-click="deleteCurrent(supp)">
             <span class="glyphicon glyphicon-trash icon-white"></span>
-            Delete
+            Delete current
         </button>
         <button type="button" class="btn btn-success pull-right" ng-click="update(supp)">
             <span class="glyphicon glyphicon-ok icon-white"></span> Save

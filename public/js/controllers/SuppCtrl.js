@@ -21,7 +21,7 @@ angular.module('SuppCtrl', [])
         $scope.itemToEdit = {};
         $scope.selected = {};
         $scope.newBenefit = {};
-        
+
         Supps.get()
             .success(function(data) {
                 console.log("got from server!");
@@ -43,7 +43,10 @@ angular.module('SuppCtrl', [])
                 $scope.newBenefit = {};
             }
         };
-        $scope.deleteSupp = function(item) {
+        $scope.isBindingWorking = function() {
+            console.log("yes, binding is working");
+        };
+        $scope.deleteCurrent = function(item) {
             if (!confirm("Are you sure you want to delete this item?"))
                 return;
             var index = $scope.supps.indexOf(item);
@@ -87,10 +90,9 @@ angular.module('SuppCtrl', [])
             });
 //            $scope.setEdit(newSupp);
         };
-        $scope.setEdit = function(item) {
+        $scope.setedit = function(item) {
 //            if (item === $scope.itemToEdit)
 //                return;
-            console.log(item.name + " - current item to edit");
 //            $scope.itemToEdit = item;
 //            
 //            $scope.itemEdit = $scope.itemToEdit;
@@ -98,8 +100,10 @@ angular.module('SuppCtrl', [])
             $scope.selected = $scope.itemToEdit;
             $scope.titleEditMode = false;
         };
-        $scope.testScope = function() {
-            console.log("scope tested, brah");
+        $scope.testScope = function(supp) {
+            console.log(supp);
+            $scope.itemToEdit = supp;
+            $scope.titleEditMode = false;
         };
     })
     .directive("suppEditable",
@@ -111,9 +115,10 @@ angular.module('SuppCtrl', [])
                     toggleTitleEdit: "&",
                     update: "&",
                     addBenefit: "&",
-                    deleteSupp: "&",
+                    'deleteCurrent': "&deleteCurrent",
                     itemToEdit: "=",
                     selected: "=",
+                    setEdit: "&",
                 },
                 transclude: true
             };
