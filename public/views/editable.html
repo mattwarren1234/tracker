@@ -6,15 +6,13 @@
         <li>Dosage: {{supp.dosage}}</li>
     </ul>
     <h3>Benefits</h3>
-
-    <!--<div ng-hide="supp == itemToEdit">-->
     <ul>
         <li ng-repeat="benefit in supp.benefits">{{benefit}}</li>
     </ul>
 </div>
 <div ng-click="setEdit()" ng-show="supp === itemToEdit"> 
     <div>
-        <button type="button" class="btn btn-danger pull-right" ng-click="deleteCurrent(supp)">
+        <button type="button" class="btn btn-danger pull-right" ng-click="delete(supp)">
             <span class="glyphicon glyphicon-trash icon-white"></span>
             Delete current
         </button>
@@ -24,7 +22,7 @@
     </div>
     <div>
         <a ng-hide="titleEditMode" ng-click="toggleTitleEdit()">
-            <h3>{{supp.name}} - edit mode</h3>
+           <h3>{{supp.name}} (edit mode)</h3>
         </a>
         <h3 ng-show="titleEditMode" ><input ng-model="supp.name" type="text">
         </h3>

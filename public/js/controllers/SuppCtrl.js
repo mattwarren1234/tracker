@@ -107,7 +107,7 @@ angular.module('SuppCtrl', [])
                     toggleTitleEdit: "&",
                     update: "&",
                     addBenefit: "&",
-                    'deleteCurrent': "&deleteCurrent",
+                    delete: "&",
                     itemToEdit: "=",
                     selected: "=",
                     setEdit: "&",
