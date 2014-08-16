@@ -49,11 +49,9 @@ angular.module('SuppCtrl', [])
         $scope.deleteCurrent = function(item) {
             if (!confirm("Are you sure you want to delete this item?"))
                 return;
-            var index = $scope.supps.indexOf(item);
-            if (index === -1)
-                return;
             Supps.delete(item)
                 .success(function(data) {
+                    alert("delete was successful");
                     $scope.supps = data;
                 });
 //        Supps.create($scope.formData)
@@ -68,7 +66,6 @@ angular.module('SuppCtrl', [])
              .success(function(data){
              $scope.supps = data;
              });*/
-            $scope.supps.splice(index, 1);
         };
         $scope.reverseName = function() {
             console.log("name reversed!");
