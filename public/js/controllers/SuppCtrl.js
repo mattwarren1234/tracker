@@ -90,19 +90,11 @@ angular.module('SuppCtrl', [])
             });
 //            $scope.setEdit(newSupp);
         };
-        $scope.setedit = function(item) {
-//            if (item === $scope.itemToEdit)
-//                return;
-//            $scope.itemToEdit = item;
-//            
-//            $scope.itemEdit = $scope.itemToEdit;
+        $scope.setEdit = function(item) {
+            if (item === $scope.itemToEdit)
+                return;
             $scope.itemToEdit = item;
             $scope.selected = $scope.itemToEdit;
-            $scope.titleEditMode = false;
-        };
-        $scope.testScope = function(supp) {
-            console.log(supp);
-            $scope.itemToEdit = supp;
             $scope.titleEditMode = false;
         };
     })
