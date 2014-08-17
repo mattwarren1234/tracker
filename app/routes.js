@@ -2,16 +2,6 @@ var Supp = require('./models/supp');
 
 module.exports = function(app, router) {
 
-//router.get('/api/supps', function(req, res) {
-//        //use mongoose : find all nerds in db
-//        Supp.find(function(err, supps) {
-//            if (err)
-//                res.send(err);
-//
-//            res.json(supps);
-//
-//        });
-//    });
     app.get('/api/supps', function(req, res) {
         //use mongoose : find all nerds in db
         Supp.find(function(err, supps) {
