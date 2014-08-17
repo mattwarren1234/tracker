@@ -7,16 +7,25 @@ angular.module('SuppCtrl', [])
 
         $scope.showInitialEmptyItem = false;
 
-        $scope.initSupp = {
+        $scope.initSupp = {};
+        $scope.defaultValues = {
             name: "New Supplement",
             description: "",
             dosage: "",
             benefits: []
         };
+        Object.freeze($scope.defaultValues);
 
 
         $scope.showInitial = function() {
+
+//            $scope.initSupp = $scope.defaultValues;
+            $scope.initSupp.name = $scope.defaultValues.name;
+            $scope.initSupp.description = $scope.defaultValues.description;
+            $scope.initSupp.dosage = $scope.defaultValues.dosage;
+            $scope.initSupp.benefits = $scope.defaultValues.benefits;
             $scope.showInitialEmptyItem = true;
+
         };
         $scope.delete = function(item) {
             if (!confirm("Are you sure you want to delete this item?"))
