@@ -91,6 +91,7 @@ angular.module('SuppCtrl', [])
                         }
                     };
                     $scope.setEdit = function(item) {
+                        console.log("set edit called");
                         if (item === $scope.itemToEdit)
                             return;
                         $scope.itemToEdit = item;
