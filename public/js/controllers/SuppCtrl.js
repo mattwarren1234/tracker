@@ -1,21 +1,19 @@
 angular.module('SuppCtrl', [])
     .controller('SuppController', function($scope, Supps) {
         $scope.tagline = 'view supplements here!';
-        var supp = {
-            name: "Vitamin D",
-            description: "Its a pill, yo!",
-            dosage: "300mg",
-            benefits: ["Does amazing things",
-                "many amazing things"]
-        };
-        $scope.input = "test input hah";
-        var supp2 = {
-            name: "Fish oil",
-            description: "Supposed to help with joints",
-            dosage: "200mg",
-            benefits: []
-        };
-        $scope.testSupp = supp2;
+//        var supp = {
+//            name: "Vitamin D",
+//            description: "Its a pill, yo!",
+//            dosage: "300mg",
+//            benefits: ["Does amazing things",
+//                "many amazing things"]
+//        };
+//        var supp2 = {
+//            name: "Fish oil",
+//            description: "Supposed to help with joints",
+//            dosage: "200mg",
+//            benefits: []
+//        };
 
         $scope.titleEditMode = false;
         $scope.itemToEdit = {};
@@ -28,7 +26,6 @@ angular.module('SuppCtrl', [])
                 $scope.supps = data;
             })
             .error(function(data) {
-                console.log("test");
                 console.log("failed, yo!" + data);
             });
 
@@ -37,35 +34,26 @@ angular.module('SuppCtrl', [])
             console.log("title edit mode set to " + $scope.titleEditMode);
         };
         $scope.addBenefit = function() {
-            //if (!$scope.newBenefit) return;
             if (!$.isEmptyObject($scope.newBenefit)) {
-//                $scope.itemToEdit.benefits.push($scope.newBenefit.text);
                 $scope.newBenefit = {};
             }
         };
         $scope.isBindingWorking = function() {
             console.log("yes, binding is working");
         };
+        $scope.saveChanges = function(item) {
+            Supps.post
+
+        };
+
         $scope.deleteCurrent = function(item) {
             if (!confirm("Are you sure you want to delete this item?"))
                 return;
             Supps.delete(item)
                 .success(function(data) {
-                    alert("delete was successful");
+                    alert(data);
                     $scope.supps = data;
                 });
-//        Supps.create($scope.formData)
-//            // if successful creation, call our get function to get all the new todos
-//            .success(function(data) {
-//                $scope.formData = {}; // clear the form so our user is ready to enter another
-//                $scope.todos = data; // assign our new list of todos
-//            });
-
-
-            /*Supps.delete(item)
-             .success(function(data){
-             $scope.supps = data;
-             });*/
         };
         $scope.reverseName = function() {
             console.log("name reversed!");
@@ -99,6 +87,9 @@ angular.module('SuppCtrl', [])
         function() {
             return{
                 templateUrl: '/public/views/editable.html',
+                controller: function($scope) {
+
+                },
                 scope: {
                     supp: '=supp',
                     toggleTitleEdit: "&",
@@ -109,6 +100,6 @@ angular.module('SuppCtrl', [])
                     selected: "=",
                     setEdit: "&",
                 },
-                transclude: true
+//                transclude: true
             };
         });

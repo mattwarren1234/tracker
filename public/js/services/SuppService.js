@@ -4,6 +4,9 @@ angular.module('SuppService', []).factory('Supps', ['$http', function($http){
 		get : function(){
 			return $http.get('/api/supps');
 		},
+                update : function(suppData){
+                    return $http.put('/api/supps', suppData);
+                },
 
 		create: function(suppData){
 			return $http.post('/api/supps', suppData);
