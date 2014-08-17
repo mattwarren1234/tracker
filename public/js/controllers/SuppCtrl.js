@@ -15,7 +15,6 @@ angular.module('SuppCtrl', [])
 //            benefits: []
 //        };
 
-        $scope.titleEditMode = false;
         $scope.itemToEdit = {};
         $scope.selected = {};
         $scope.newBenefit = {};
@@ -29,10 +28,6 @@ angular.module('SuppCtrl', [])
                 console.log("failed, yo!" + data);
             });
 
-        $scope.toggleTitleEdit = function() {
-            $scope.titleEditMode = !$scope.titleEditMode;
-            console.log("title edit mode set to " + $scope.titleEditMode);
-        };
         $scope.addBenefit = function() {
             if (!$.isEmptyObject($scope.newBenefit)) {
                 $scope.newBenefit = {};
@@ -81,16 +76,21 @@ angular.module('SuppCtrl', [])
             $scope.selected = $scope.itemToEdit;
             $scope.titleEditMode = false;
         };
-
+        $scope.message = "";
         $scope.update = function(item) {
             console.log("update called!");
             Supps.update(item)
                 .success(function(data) {
-                    console.log("update success! returned data:");
                     console.log(data);
+                    //not doing anything with data, b/c it should already match client side!
+                    $scope.setEdit({});
+                    $scope.message = "Item updated!";
+                    setTimeout(function() {
+                        $scope.message = "";
+                        $scope.$apply();
+                    }, 2500);
                 })
                 .error(function(data) {
-                    console.log("update ERROR! returned data:");
                     console.log(data);
                 });
         };
@@ -100,11 +100,16 @@ angular.module('SuppCtrl', [])
             return{
                 templateUrl: '/public/views/editable.html',
                 controller: function($scope) {
-
+                    $scope.titleEditMode = false;
+                    $scope.toggleTitleEdit = function() {
+                        $scope.titleEditMode = !$scope.titleEditMode;
+                    };
+                    $scope.saveTitle = function() {
+                        $scope.titleEditMode = false; 
+                    };
                 },
                 scope: {
                     supp: '=supp',
-                    toggleTitleEdit: "&",
                     update: "&",
                     addBenefit: "&",
                     delete: "&",

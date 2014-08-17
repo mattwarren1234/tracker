@@ -22,9 +22,9 @@
     </div>
     <div>
         <a ng-hide="titleEditMode" ng-click="toggleTitleEdit()">
-           <h3>{{supp.name}} (edit mode)</h3>
+            <h3>{{supp.name}} (edit mode)</h3>
         </a>
-        <h3 ng-show="titleEditMode" ><input ng-model="supp.name" type="text">
+        <h3 ng-show="titleEditMode" ><form ng-submit="saveTitle()"><input ng-model="supp.name" type="text"></form>
         </h3>
     </div>
     <div >
