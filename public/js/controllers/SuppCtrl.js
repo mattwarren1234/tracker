@@ -3,79 +3,98 @@ angular.module('SuppCtrl', [])
         $scope.tagline = 'view supplements here!';
         $scope.itemToEdit = {};
         $scope.selected = {};
-
-        Supps.get()
-            .success(function(data) {
-                console.log("got from server!");
-                $scope.supps = data;
-                if ($scope.supps.length === 0)
-                {
-//                    $scope.showInitial();
-                }
-            })
-            .error(function(data) {
-                console.log("failed, yo!" + data);
-            });
+        $scope.message = "";
 
         $scope.showInitialEmptyItem = false;
+
         $scope.initSupp = {
-            name: "Click to set title",
+            name: "New Supplement",
             description: "",
             dosage: "",
             benefits: []
         };
+
+
         $scope.showInitial = function() {
             $scope.showInitialEmptyItem = true;
         };
         $scope.delete = function(item) {
             if (!confirm("Are you sure you want to delete this item?"))
                 return;
-            Supps.delete(item)
+            Supps.delete(item._id)
                 .success(function(data) {
-                    alert(data);
-                    $scope.supps = data;
+                    $scope.getCurrentList();
                 });
-        };
-        $scope.reverseName = function() {
-            console.log("name reversed!");
         };
         $scope.addSupp = function() {
-              $scope.showInitial();
-              $scope.itemToEdit = $scope.initSupp;
-//            Supps.create($scope.newSupp)
-//                .success(function(data) {
-//                    $scope.supps = data;
-//                })
-//                .error(function(data) {
-//                    console.log("errah brah!" + data);
-//                });
+            $scope.showInitial();
+            $scope.itemToEdit = $scope.initSupp;
         };
 
-        $scope.message = "";
-        $scope.update = function(item) {
-            console.log("update called!");
-            Supps.update(item)
+        $scope.save = function() {
+            console.log("scope save calld");
+        };
+
+        $scope.isNewObject = function(item) {
+            return item._id == undefined;//if id is set, is from server.
+        };
+
+        $scope.getCurrentList = function() {
+            Supps.get()
                 .success(function(data) {
-                    console.log(data);
-                    //not doing anything with data, b/c it should already match client side!
-                    $scope.setEdit({});
-                    $scope.message = "Item updated!";
-                    setTimeout(function() {
-                        $scope.message = "";
-                        $scope.$apply();
-                    }, 2500);
-                })
-                .error(function(data) {
-                    console.log(data);
+                    $scope.supps = data;
+                    $scope.showInitialEmptyItem = false;
+                    $scope.itemToEdit = {};
                 });
         };
+
+        $scope.save = function(item) {
+            console.log("update called! id is");
+//            console.log(item);
+            if ($scope.isNewObject(item)) {
+
+                Supps.create(item)
+                    .success(function(data) {
+                        $scope.getCurrentList();
+                        //not doing anything with data, b/c it should already match client side!
+                        $scope.message = "Item saved!";
+                        setTimeout(function() {
+                            $scope.message = "";
+                            $scope.$apply();
+
+                        }, 2500);
+                    })
+                    .error(function(data) {
+                        console.log(data);
+                    });
+            } else {
+                Supps.update(item)
+                    .success(function(data) {
+                        console.log(data);
+                        //not doing anything with data, b/c it should already match client side!
+                        $scope.setEdit({});
+                        $scope.message = "Item updated!";
+                        setTimeout(function() {
+                            $scope.message = "";
+                            $scope.$apply();
+                        }, 2500);
+                    })
+                    .error(function(data) {
+                        console.log(data);
+                    });
+            }
+
+        };
+
+        $scope.getCurrentList();
+
     })
     .directive("suppEditable",
         function() {
             return{
                 templateUrl: '/public/views/editable.html',
                 controller: function($scope) {
-                    $scope.newBenefit = {};
+                    $scope.newBenefit = "";
 
                     $scope.titleEditMode = false;
                     $scope.toggleTitleEdit = function() {
@@ -87,7 +106,7 @@ angular.module('SuppCtrl', [])
                     $scope.addBenefit = function() {
                         if (!$.isEmptyObject($scope.newBenefit)) {
                             $scope.supp.benefits.push($scope.newBenefit);
-                            $scope.newBenefit = {};
+                            $scope.newBenefit = "";
                         }
                     };
                     $scope.setEdit = function(item) {
@@ -95,7 +114,6 @@ angular.module('SuppCtrl', [])
                         if (item === $scope.itemToEdit)
                             return;
                         $scope.itemToEdit = item;
-//                        $scope.selected = $scope.itemToEdit;
                         $scope.titleEditMode = false;
                     };
                 },
@@ -103,9 +121,8 @@ angular.module('SuppCtrl', [])
                     supp: '=supp',
                     update: "&",
                     delete: "&",
+                    save: "&",
                     itemToEdit: "=",
-//                    selected: "=",
-                },
-//                transclude: true
+                }
             };
         });

@@ -15,7 +15,7 @@
             <span class="glyphicon glyphicon-trash icon-white"></span>
             Delete
         </button>
-        <button type="button" class="btn btn-success pull-right" ng-click="update()">
+        <button type="button" class="btn btn-success pull-right" ng-click="save(supp)">
             <span class="glyphicon glyphicon-ok icon-white"></span> Save
         </button>
     </div>
@@ -41,13 +41,15 @@
     <div>
         <h3>Benefits</h3>
         <ul>
+            <!--{{supp.benefits}}-->
             <span ng-repeat="benefit in supp.benefits">
+                {{benefit.text}}
                 <input class="form-control" ng-model="benefit" type="text">
             </span>
             <li>
                 <form ng-submit="addBenefit()">
                     <input class="form-control" type="text" placeholder="Enter additional benefit..." ng-model="newBenefit">
-                    <!--<button type="submit" class="btn btn-primary btn-lg" ng-click="addBenefit()">Add</button>-->
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="addBenefit()">Add</button>
                 </form>
             </li>
         </ul>

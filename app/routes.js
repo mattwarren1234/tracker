@@ -41,18 +41,15 @@ module.exports = function(app, router) {
     app.post('/api/supps', function(req, res) {
         var supp = new Supp();
         var supp_data = {
-            name: req.params.name,
-            description: req.params.description,
-            dosage: req.params.dosage,
-            benefits: req.params.benefits
+            name: req.body.name,
+            description: req.body.description,
+            dosage: req.body.dosage,
+            benefits: req.body.benefits
         };
-
         supp.name = supp_data.name;
         supp.description = supp_data.description;
         supp.dosage = supp_data.dosage;
         supp.benefits = supp_data.benefits;
-        console.log("api post requested");
-        return;
         try {
             supp.save(function(err, data) {
                 if (err) {
@@ -65,14 +62,7 @@ module.exports = function(app, router) {
         } catch (err) {
             console.log(err);
         }
-        //use mongoose : find all nerds in db
-//        Supp.save(function(err, nerds) {
-//            if (err)
-//                res.send(err);
-//
-//            res.json(supps);
-//
-//        });
+
     });
 //route to handle creating (app.post)
     //route to handle delete (app.delete)

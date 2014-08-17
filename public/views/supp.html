@@ -4,11 +4,11 @@
     <p>{{message}}</p>
     <div class="list-group text-left">
         <div class="list-group-item" ng-repeat="supp in supps"   >
-            <span supp-editable supp="supp" item-to-edit="itemToEdit" item="item" selected="selected" delete="delete(item)" update="update(supp)">
+            <span supp-editable supp="supp" item-to-edit="itemToEdit" item="item" selected="selected" delete="delete(supp)" save="save(supp)">
             </span>
         </div>
         <span>
-            <span supp-editable ng-show="showInitialEmptyItem" supp="initSupp" item-to-edit="itemToEdit" item="item" selected="selected" delete="delete(item)" update="update(supp)"></span>
+            <span supp-editable ng-show="showInitialEmptyItem" supp="initSupp" item-to-edit="itemToEdit" item="item" selected="selected" delete="delete(item)" save="save(initSupp)"></span>
         </span>
         <div class="list-group-item">
             <button type="button" class="center-block btn btn-primary" ng-click="addSupp()" addBenefit="addBenefit"> 
