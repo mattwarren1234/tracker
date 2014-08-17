@@ -66,14 +66,13 @@ angular.module('SuppCtrl', [])
             benefits: []
         };
         $scope.addSupp = function() {
-            Supps.create($scope.newSupp).
-                success(function(data) {
+            Supps.create($scope.newSupp)
+                .success(function(data) {
                     $scope.supps = data;
-                }).error(function(data)
-            {
-                console.log("errah brah!" + data);
-            });
-//            $scope.setEdit(newSupp);
+                })
+                .error(function(data) {
+                    console.log("errah brah!" + data);
+                });
         };
         $scope.setEdit = function(item) {
             if (item === $scope.itemToEdit)
@@ -81,6 +80,19 @@ angular.module('SuppCtrl', [])
             $scope.itemToEdit = item;
             $scope.selected = $scope.itemToEdit;
             $scope.titleEditMode = false;
+        };
+
+        $scope.update = function(item) {
+            console.log("update called!");
+            Supps.update(item)
+                .success(function(data) {
+                    console.log("update success! returned data:");
+                    console.log(data);
+                })
+                .error(function(data) {
+                    console.log("update ERROR! returned data:");
+                    console.log(data);
+                });
         };
     })
     .directive("suppEditable",

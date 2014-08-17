@@ -33,18 +33,14 @@ module.exports = function(app, router) {
         });
 
     });
-    app.put('/api/supps', function(req, res) {
-        var supp = new Supp();
+    app.post('/api/supps/:supp_id', function(req, res) {
         var supp_data = {
-            name: req.params.name,
-            description: req.params.description,
-            dosage: req.params.dosage,
-            benefits: req.params.benefits
+            name: req.body.name,
+            description: req.body.description,
+            dosage: req.body.dosage,
+            benefits: req.body.benefits
         };
-
-        var id = req.params.id;
-        console.log('id is ' + id);
-        return;
+        var id = req.params.supp_id;
         Supp.findByIdAndUpdate(id, {$set: supp_data}, function(err, supp) {
             if (err)
                 return handleError(err);

@@ -4,12 +4,11 @@ angular.module('SuppService', []).factory('Supps', ['$http', function($http){
 		get : function(){
 			return $http.get('/api/supps');
 		},
-                update : function(suppData){
-                    return $http.put('/api/supps', suppData);
+                update : function(supp){
+                    return $http.post('/api/supps/' + supp._id, supp);
                 },
-
-		create: function(suppData){
-			return $http.post('/api/supps', suppData);
+		create: function(supp){
+			return $http.post('/api/supps', supp);
 		},
 
 		delete : function(id){
