@@ -57,6 +57,15 @@ angular.module('SuppCtrl', [])
                 });
         };
 
+        $scope.setEdit = function(item) {
+            console.log("set edit called");
+            if (item === $scope.itemToEdit)
+                return;
+            $scope.itemToEdit = {};
+            $scope.itemToEdit = item;
+            $scope.titleEditMode = false;
+        };
+
         $scope.save = function(item) {
             console.log("update called! id is");
 //            console.log(item);
@@ -104,7 +113,6 @@ angular.module('SuppCtrl', [])
                 templateUrl: '/public/views/editable.html',
                 controller: function($scope) {
                     $scope.newBenefit = "";
-
                     $scope.titleEditMode = false;
                     $scope.toggleTitleEdit = function() {
                         $scope.titleEditMode = !$scope.titleEditMode;
@@ -118,13 +126,8 @@ angular.module('SuppCtrl', [])
                             $scope.newBenefit = "";
                         }
                     };
-                    $scope.setEdit = function(item) {
-                        console.log("set edit called");
-                        if (item === $scope.itemToEdit)
-                            return;
-                        $scope.itemToEdit = item;
-                        $scope.titleEditMode = false;
-                    };
+                    $scope.setEdit = $scope.$parent.setEdit;
+
                 },
                 scope: {
                     supp: '=supp',
