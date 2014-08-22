@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/app/models/supp.js</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/views/editable.html</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/js/controllers/SuppCtrl.js</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/views/supp.html</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/js/services/SuppService.js</file>
+            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/config/db.js</file>
+            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/server.js</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/app/routes.js</file>
         </group>
     </open-files>

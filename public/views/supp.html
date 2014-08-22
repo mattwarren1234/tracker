@@ -1,14 +1,13 @@
 <div class="jumbotron text-center">
     <h1>Currently tracked supplements</h1>
-    <p>(Click to edit)</p>
     <p>{{message}}</p>
+    <h2>{{windowMessage.text}}</h2>
     <div class="list-group text-left">
         <div class="list-group-item" ng-repeat="supp in supps"   >
-            <span supp-editable supp="supp" item-to-edit="itemToEdit" item="item" selected="selected" delete="delete(supp)" save="save(supp)">
+            <span supp-editable supp="supp" item-to-edit="itemToEdit" on-refresh="refreshList"  window-message="windowMessage" lower="lower" object="object">
             </span>
         </div>
-        <div class="list-group-item">
-            <span supp-editable ng-show="showInitialEmptyItem" supp="initSupp" item-to-edit="itemToEdit" item="item" selected="selected" delete="delete(item)" save="save(initSupp)"></span>
+        <div class="list-group-item" supp-editable ng-show="showInitialEmptyItem" supp="initSupp" item-to-edit="itemToEdit" on-refresh="refreshList" window-message="windowMessage">
         </div>
         <div class="list-group-item">
             <button type="button" class="center-block btn btn-primary" ng-click="addSupp()" addBenefit="addBenefit"> 

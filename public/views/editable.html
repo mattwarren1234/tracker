@@ -1,3 +1,6 @@
+<!--NORMAL DISPLAY MODE-->
+
+
 <div ng-hide="supp === itemToEdit" ng-click="setEdit(supp)">
     <h3 >{{supp.name}}</h3>
     <ul>
@@ -9,6 +12,11 @@
         <li ng-repeat="benefit in supp.benefits">{{benefit.text}}</li>
     </ul>
 </div>
+
+
+
+<!--EDIT MODE-->
+
 <div ng-show="supp === itemToEdit"> 
     <div>
         <button type="button" class="btn btn-danger pull-right" ng-click="delete(supp)">
@@ -41,7 +49,6 @@
     <div>
         <h3>Benefits</h3>
         <ul>
-            <!--{{supp.benefits}}-->
             <span ng-repeat="benefit in supp.benefits">
                 {{benefit.text}}
                 <input class="form-control" ng-model="benefit" type="text">

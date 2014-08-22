@@ -1,10 +1,11 @@
 angular.module('SuppCtrl', [])
     .controller('SuppController', function($scope, Supps) {
-        $scope.tagline = 'view supplements here!';
         $scope.itemToEdit = {};
         $scope.selected = {};
-        $scope.message = "";
-
+        $scope.windowMessage = {
+                text : ""
+        };
+        $scope.object = {item1: "ohhai"};
         $scope.showInitialEmptyItem = false;
 
         $scope.initSupp = {};
@@ -12,14 +13,11 @@ angular.module('SuppCtrl', [])
             name: "New Supplement",
             description: "",
             dosage: "",
-            benefits: []
+            benefits: [{text : ""}]
         };
         Object.freeze($scope.defaultValues);
 
-
         $scope.showInitial = function() {
-
-//            $scope.initSupp = $scope.defaultValues;
             $scope.initSupp.name = $scope.defaultValues.name;
             $scope.initSupp.description = $scope.defaultValues.description;
             $scope.initSupp.dosage = $scope.defaultValues.dosage;
@@ -27,28 +25,14 @@ angular.module('SuppCtrl', [])
             $scope.showInitialEmptyItem = true;
 
         };
-        $scope.delete = function(item) {
-            if (!confirm("Are you sure you want to delete this item?"))
-                return;
-            Supps.delete(item._id)
-                .success(function(data) {
-                    $scope.getCurrentList();
-                });
-        };
+
         $scope.addSupp = function() {
             $scope.showInitial();
             $scope.itemToEdit = $scope.initSupp;
         };
 
-        $scope.save = function() {
-            console.log("scope save calld");
-        };
 
-        $scope.isNewObject = function(item) {
-            return item._id == undefined;//if id is set, is from server.
-        };
-
-        $scope.getCurrentList = function() {
+        $scope.refreshList = function() {
             Supps.get()
                 .success(function(data) {
                     $scope.supps = data;
@@ -66,52 +50,16 @@ angular.module('SuppCtrl', [])
             $scope.titleEditMode = false;
         };
 
-        $scope.save = function(item) {
-            console.log("update called! id is");
-//            console.log(item);
-            if ($scope.isNewObject(item)) {
-
-                Supps.create(item)
-                    .success(function(data) {
-                        $scope.getCurrentList();
-                        //not doing anything with data, b/c it should already match client side!
-                        $scope.message = "Item saved!";
-                        setTimeout(function() {
-                            $scope.message = "";
-                            $scope.$apply();
-
-                        }, 2500);
-                    })
-                    .error(function(data) {
-                        console.log(data);
-                    });
-            } else {
-                Supps.update(item)
-                    .success(function(data) {
-                        console.log(data);
-                        //not doing anything with data, b/c it should already match client side!
-                        $scope.setEdit({});
-                        $scope.message = "Item updated!";
-                        setTimeout(function() {
-                            $scope.message = "";
-                            $scope.$apply();
-                        }, 2500);
-                    })
-                    .error(function(data) {
-                        console.log(data);
-                    });
-            }
-
-        };
-
-        $scope.getCurrentList();
+        $scope.refreshList();
 
     })
-    .directive("suppEditable",
-        function() {
+    .directive("suppEditable", ['Supps',
+        function(Supps) {
             return{
                 templateUrl: '/public/views/editable.html',
                 controller: function($scope) {
+                    //     $scope.obj.item1 = " try try ";
+//               $scope.obj = $scope.$parent.obj;
                     $scope.newBenefit = "";
                     $scope.titleEditMode = false;
                     $scope.toggleTitleEdit = function() {
@@ -128,13 +76,65 @@ angular.module('SuppCtrl', [])
                     };
                     $scope.setEdit = $scope.$parent.setEdit;
 
+                    $scope.delete = function(item) {
+                        if (!confirm("Are you sure you want to delete this item?"))
+                            return;
+                        Supps.delete(item._id)
+                            .success(function(data) {
+                                $scope.$parent.refreshList();
+                            });
+                    };
+
+                    $scope.isNewObject = function(item) {
+                        return item._id == undefined;//if id is set, is from server.
+                    };
+
+                    $scope.save = function(item) {
+                        $scope.lower = " updtaed in dir ";
+                        $scope.object.item1 = "oh try ";
+                        if ($scope.isNewObject(item)) {
+                            Supps.create(item)
+                                .success(function(data) {
+                                    $scope.$parent.refreshList();
+                                    //not doing anything with data, b/c it should already match client side!
+                                    $scope.windowMessage.text = "Item saved!";
+//                                    $scope.$apply();
+                                    setTimeout(function() {
+                                        $scope.windowMessage.text = "";
+                                        $scope.$apply();
+
+                                    }, 2500);
+                                })
+                                .error(function(data) {
+                                    console.log(data);
+                                });
+                        } else {
+                            Supps.update(item)
+                                .success(function(data) {
+                                    console.log(data);
+                                    //not doing anything with data, b/c it should already match client side!
+                                    $scope.setEdit({});
+                                    $scope.windowMessage.text = "Item updated!";
+//                                    $scope.$apply();
+                                    setTimeout(function() {
+                                        $scope.windowMessage.text = "";
+                                        $scope.$apply();
+                                    }, 2500);
+                                })
+                                .error(function(data) {
+                                    console.log(data);
+                                });
+                        }
+                    };
                 },
                 scope: {
+                    windowMessage:"=",
+                    object: "=",
+                    lower: "=",
                     supp: '=supp',
-                    update: "&",
-                    delete: "&",
-                    save: "&",
+                    update: "@",
                     itemToEdit: "=",
-                }
+                    onRefresh: "&"
+                },
             };
-        });
+        }]);
