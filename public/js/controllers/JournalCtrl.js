@@ -5,12 +5,16 @@ angular.module('JournalCtrl', [])
 
         $scope.startDate = new Date();
         var today = new Date();
-        var date10DaysAgo = (today.getDate() - 10);
+        var startDate = new Date();
+        startDate.setDate(today.getDate() - 10);
 
-        var asDays = function(diff) {
+        $scope.asDays = function(diff) {
+            console.log(startDate.getDate());
+            console.log("diff is "+ diff);
+            console.log(diff / (1000 * 60 * 60 * 24));
             return  Math.floor(diff / (1000 * 60 * 60 * 24));
         };
-        $scope.daysInJournal = asDays(today - date10DaysAgo);
+        $scope.daysInJournal = $scope.asDays(today - startDate);
 
         $scope.supp1 = {
             date: new Date(),
