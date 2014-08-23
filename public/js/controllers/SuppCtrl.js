@@ -64,8 +64,9 @@ angular.module('SuppCtrl', [])
                     };
                     $scope.addBenefit = function() {
                         if ($scope.newBenefit.description !== "") {
-                            if ($scope.supp.benefits.every($scope.notAlreadySaved)) {
-                                $scope.supp.benefits.push({description: $scope.newBenefit.description});
+//                            if ($scope.supp.benefits.every($scope.notAlreadySaved)) 
+                            {
+                                $scope.supp.benefits.push($scope.newBenefit.description);
                             }
                             $scope.newBenefit.description = "";
                         }

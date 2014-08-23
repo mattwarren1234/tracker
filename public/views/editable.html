@@ -9,7 +9,7 @@
     </ul>
     <h3>Benefits</h3>
     <ul>
-        <li ng-repeat="benefit in supp.benefits">{{benefit.text}}</li>
+        <li ng-repeat="benefit in supp.benefits track by $index">{{benefit}}</li>
     </ul>
 </div>
 
@@ -49,9 +49,9 @@
     <div>
         <h3>Benefits</h3>
         <ul>
-            <span ng-repeat="benefit in supp.benefits">
+            <span ng-repeat="benefit in supp.benefits track by $index">
                 <!--{{benefit.text}}-->
-                <input class="form-control" ng-model="benefit.description" type="text" placeholder="why">
+                <input class="form-control" ng-model="benefit" type="text" placeholder="why">
             </span>
             <!--Already existing benefits-->
             <!--add new benefit to new item-->
