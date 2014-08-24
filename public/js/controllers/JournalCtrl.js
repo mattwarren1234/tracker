@@ -9,14 +9,11 @@ angular.module('JournalCtrl', [])
         startDate.setDate(today.getDate() - 10);
 
         $scope.asDays = function(diff) {
-            console.log(startDate.getDate());
-            console.log("diff is "+ diff);
-            console.log(diff / (1000 * 60 * 60 * 24));
             return  Math.floor(diff / (1000 * 60 * 60 * 24));
         };
         $scope.daysInJournal = $scope.asDays(today - startDate);
 
-        $scope.supp1 = {
+        var supp1 = {
             date: new Date(),
             name: "Fish oil",
             benefits: [
@@ -27,14 +24,30 @@ angular.module('JournalCtrl', [])
             ]
         };
 
-        $scope.supp2 = {
+        var supp2 = {
             date: new Date(),
-            name: "Fish oil",
+            name: "vitamin d",
             benefits: [
-                {description: "Reduces joint pain",
+                {description: "Increases wakefulness",
                     score: .5},
-                {description: "Increases mental clarity",
-                    score: .2}
             ]
+        };
+
+        $scope.supps = [supp1, supp2];
+
+        $scope.previousDay = function() {
+        };
+        $scope.nextDay = function() {
+        };
+//        $("#rating").raty({ starType: 'i' });
+        $('#rating').text("<p>test</p>");
+
+    })
+    .directive('star', function() {
+        return {
+            restrict: 'AEC',
+            link: function(scope, element, attrs) {
+                $(element).raty({starType: 'i'});
+            }
         };
     });

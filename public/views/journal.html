@@ -1,15 +1,31 @@
 <div class="jumbotron text-center">
     <h1>Journal</h1>
     <div>
-        <p>Day {{daysInJournal}} of 30</p>
-        <p>Edit yo stuff here</p>
+        <p>Day <strong>{{daysInJournal}}</strong> of <strong>30</strong></p>
+        <a href="" ng-click="previousDay()" class="glyphicon glyphicon-chevron-left" style="float: left; text-decoration : none; font-size:30px"></a>
+        <a href=""  ng-click="nextDay()"  class="glyphicon glyphicon-chevron-right" style="float: right; text-decoration : none; font-size:30px"></a>
+        <div class="center-block" style="padding-left:10%; padding-right:10%">
+            <table class="table table-condensed" style="padding:50%">
+                <tr ng-repeat="supp in supps" style="padding-left: 90px"><td>
+                        <h2 class="text-left">{{supp.name}}</h2>
+                        <h4 class="text-left">How well did it...</h4>
+                        <table class="table table-hover table-condensed" >
+                            <tr ng-repeat="benefit in supp.benefits" >
+                                <td >
+                                    <h4 class="col-md-6 text-left" style="vertical-align:top">{{benefit.description}}</h4>
 
-        <a class="glyphicon glyphicon-chevron-left" style="float: left"></a>
-          <a class="glyphicon glyphicon-chevron-right" style="float: right"></a>
-        <p>
-            CENTER YAOH!
-        </p>
-      
+                                </td>
+                                <td>
+<h5 class="text-left col-md-6 star"></h5>                                    
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
 
     </div>
 </div>

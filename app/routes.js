@@ -1,15 +1,8 @@
 var Supp = require('./models/supp');
 
 module.exports = function(app, router) {
-
-    app.get('/test', function(req, res) {
-        res.send("hello world!");
-    });
-
     app.get('/api/supps', function(req, res) {
         //use mongoose : find all nerds in db
-
-
         Supp.find(function(err, supps) {
             if (err)
                 res.send(err);
@@ -70,9 +63,6 @@ module.exports = function(app, router) {
         }
 
     });
-//route to handle creating (app.post)
-    //route to handle delete (app.delete)
-
     app.get("/public/views/editable.html", function(req, res) {
         res.sendfile('./public/views/editable.html');
     });
