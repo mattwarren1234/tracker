@@ -11,18 +11,32 @@ angular.module('JournalCtrl', [])
                 {date: new Date(),
                     score: 0.2}
             ];
-        }
+        };
+
+        $scope.getSuppEffectHistory = function() {
+            //SHOULD MAKE CALL TO SERVER. ALAS, it was not meant to be for this iteration.
+            return [
+                {date: new Date(),
+                    data: [
+                        {benefitId: 1, score: 0.5},
+                        {benefitId: 2, score: 0.2}
+                    ]}
+            ];
+
+        };
         var sameDay = function(date1, date2) {
-            try{
-                   return (date1.getFullYear() === date2.getFullYear()
-                && date1.getDate() === date2.getDate()
-                && date1.getMonth() === date2.getMonth());
-            }catch(err){
+            try {
+                return (date1.getFullYear() === date2.getFullYear()
+                    && date1.getDate() === date2.getDate()
+                    && date1.getMonth() === date2.getMonth());
+            } catch (err) {
                 console.log(err);
             }
-         
-        }
 
+        }
+        $scope.benefitNames = ['improves stuff',
+            'improves things'];
+        $scope.effectData = {};
         $scope.onLoad = function() {
             $scope.supp = {};
 //assuming for one right now.            
@@ -33,13 +47,14 @@ angular.module('JournalCtrl', [])
                 console.log($scope.supp.history[i].date);
                 if (sameDay(today, $scope.supp.history[i].date)) {
                     $scope.journalIndex = i;
+                    $scope.effectData = $scope.supp.history[i].data;
                     break;
                 }
             }
-            if ($scope.journalIndex === -1){
+            if ($scope.journalIndex === -1) {
                 console.log("Error! Date not found in index");
                 //add new item, i guess? and then just push stuff?
-                
+
             }
         };
 
@@ -71,8 +86,28 @@ angular.module('JournalCtrl', [])
     .directive('star', function() {
         return {
             restrict: 'AEC',
+            controller: function($scope) {
+                $scope.getName = function(id) {
+                    var benefitNames = ['improves stuff',
+                        'improves things'];
+                    if (id < 0 || id > benefitNames.length - 1) {
+                        return "Not sure what this benefit is";
+                    }
+                    return benefitNames[id];
+                };
+            },
             link: function(scope, element, attrs) {
-                $(element).raty({starType: 'i'});
+                scope.benefitNames = scope.$parent.benefitNames;
+                var starNumberConverter = function(value) {
+                    return (value * 10) / 2;
+                };
+                $(element).raty(
+                    {starType: 'i',
+                        half: true,
+                        halfShow: true,
+                        score: starNumberConverter(scope.benefit.score)}
+                );
+//                $(element).raty('score', );
             }
         };
     });
