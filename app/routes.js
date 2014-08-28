@@ -6,10 +6,44 @@ module.exports = function(app, router) {
         Supp.find(function(err, supps) {
             if (err)
                 res.send(err);
-
             res.json(supps);
 
         });
+    });
+
+//    var sameDay = function(date1, date2) {
+//        try {
+//            return (date1.getFullYear() === date2.getFullYear()
+//                && date1.getDate() === date2.getDate()
+//                && date1.getMonth() === date2.getMonth());
+//        } catch (err) {
+//            console.log(err);
+//        }
+//
+//    }
+
+    app.get('/api/journal/:journalDate', function(req, res) {
+        //get from db using new Date(req.params.journalDate)
+        var fakeResponse =
+            [{"name": "supp1",
+                    "benefits": [
+                        {"name": "benefit1",
+                            "score": 0.3
+                        },
+                        {"name": "benefit2",
+                            "score": 0.4}
+                    ]},
+                {"name": "supp2",
+                    "benefits": [
+                        {"name": "does stuff",
+                            "score": 1
+                        },
+                        {"name": "does other stuff",
+                            "score": 0.9}
+                    ]}];
+
+        res.send(fakeResponse);
+
     });
     app.delete('/api/supps/:supp_id', function(req, res) {
         Supp.remove({
