@@ -5,15 +5,6 @@ angular.module('JournalCtrl', [])
         $scope.journalIndex = 0;
 
         $scope.getData = function() {
-//            $scope.supps = [{"name": "supp1",
-//                    "benefits": [
-//                        {"name": "benefit1",
-//                            "score": 0.3
-//                        },
-//                        {"name": "benefit2",
-//                            "score": 0.4}
-//                    ]}];
-//            return;
             Journal.get($scope.currentDate)
                 .success(function(data) {
                     $scope.supps = data;
@@ -22,19 +13,6 @@ angular.module('JournalCtrl', [])
                     } else {
                         $scope.supps = [data];
                     }
-                    console.log($scope.supps.length);
-//                    $scope.supps = [{"name": "supp1",
-//                            "benefits": [
-//                                {"name": "benefit1",
-//                                    "score": 0.3
-//                                },
-//                                {"name": "benefit2",
-//                                    "score": 0.4}
-//                            ]}];
-
-//                data.forEach(function(item){
-//                    
-//                });
                 })
                 .error(function(data) {
                 });
@@ -43,8 +21,12 @@ angular.module('JournalCtrl', [])
         $scope.getData();
 
         $scope.previousDay = function() {
+            $scope.currentDate.setDate($scope.currentDate.getDate() - 1);
+            $scope.getData();
         };
         $scope.nextDay = function() {
+            $scope.currentDate.setDate($scope.currentDate.getDate() + 1);
+            $scope.getData();
         };
     })
     .directive('star', function() {
