@@ -51,7 +51,7 @@ angular.module('SuppCtrl', [])
                 controller: function($scope) {
                     $scope.newBenefit = {
                         description: ""
-                    }
+                    };
                     $scope.titleEditMode = false;
                     $scope.toggleTitleEdit = function() {
                         $scope.titleEditMode = !$scope.titleEditMode;
@@ -63,10 +63,8 @@ angular.module('SuppCtrl', [])
                         return currBenefit.description !== $scope.newBenefit.description;
                     };
                     $scope.addBenefit = function() {
-                        if ($scope.newBenefit.description !== "") {
-//                            if ($scope.supp.benefits.every($scope.notAlreadySaved)) 
-                            {
-                                $scope.supp.benefits.push($scope.newBenefit.description);
+                        if ($scope.newBenefit.description !== "") {{
+                                $scope.supp.benefits.push({description: $scope.newBenefit.description});
                             }
                             $scope.newBenefit.description = "";
                         }
@@ -121,6 +119,6 @@ angular.module('SuppCtrl', [])
                     update: "@",
                     itemToEdit: "=",
                     onRefresh: "&"
-                },
+                }
             };
         }]);

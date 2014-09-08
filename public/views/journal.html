@@ -3,22 +3,7 @@
     <div>
         <p>{{currentDate| date : 'longDate'}}</p>
         <p>Day <strong>{{journalIndex + 1}}</strong> of <strong>30</strong></p>
-        <button ng-click="getData()">get data</button>
-        <!--        <div ng-repeat="supp in supps">
-                    <div ng-repeat="benefit in supp.benefits">
-                        <p>{{benefit.name}}</p>
-                        <p>{{benefit.score}}</p>
-                        <h5 class="text-left col-md-6 star" score="supp.score"></h5>   
-                        name benefits name score
-                                          {"supp1":
-                                            {"benefit1": 0.3,
-                                             "benefit2": 0.4}};
-                    </div>
-                </div>-->
-        <br />        <br />
         <br />
-        <br />
-
         <a href="" ng-click="previousDay()" class="glyphicon glyphicon-chevron-left" style="float: left; text-decoration : none; font-size:30px"></a>
         <a href="" ng-click="nextDay()"  class="glyphicon glyphicon-chevron-right" style="float: right; text-decoration : none; font-size:30px"></a>
         <div class="center-block" style="padding-left:10%; padding-right:10%" >
@@ -28,10 +13,10 @@
                         <table class="table table-hover table-condensed" >
                             <tr ng-repeat="benefit in supp.benefits" >
                                 <td >
-                                    <h4 class="col-md-6 text-left" style="vertical-align:top">{{benefit.name}}</h4>
+                                    <h4 class="col-md-6 text-left" style="vertical-align:top">{{benefit.description}}</h4>
                                 </td>
                                 <td>
-                                    <h5 class="text-left col-md-6 star" score="benefit.score"></h5>                                    
+                                   <h5 class="text-left col-md-6 star" score="benefit.score"></h5>                                   
                                 </td>
                             </tr>
                         </table>

@@ -1,4 +1,5 @@
 var Supp = require('./models/supp');
+var JournalEntry = require('./models/journal');
 
 module.exports = function(app, router) {
     app.get('/api/supps', function(req, res) {
@@ -10,29 +11,75 @@ module.exports = function(app, router) {
 
         });
     });
-    app.get('/api/journal/:journalDate', function(req, res) {
-        //get from db using new Date(req.params.journalDate)
-        var fakeResponse =
-            [{"name": "supp1",
-                    "benefits": [
-                        {"name": "benefit1",
-                            "score": 0.3
-                        },
-                        {"name": "benefit2",
-                            "score": 0.4}
-                    ]},
-                {"name": "supp2",
-                    "benefits": [
-                        {"name": "does stuff",
-                            "score": 1
-                        },
-                        {"name": "does other stuff",
-                            "score": 0.9}
-                    ]}];
 
-        res.send(fakeResponse);
+    app.get('/api/journal/', function(req, res) {
+        var currentDate = new Date(parseInt(req.query.date));
+        var formattedDate = new Date(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay());
+        var tomorrow = new Date();
+        tomorrow.setDate(formattedDate.getDate() + 1);
+        var userId = req.query.userId || -1;
+        JournalEntry.find(
+            {date: {$gte: formattedDate, $lt: tomorrow},
+                userId: userId},
+        function(err, results) {
+            if (err)
+                res.json(err);
+            res.send(results);
+            console.log(results);
+        });
 
     });
+
+    app.post('/api/journal/', function(req, res) {
+
+        var currentDate = req.body.date;
+        var userId = req.body.userId || 0;
+        var benefit = req.body.benefit;
+        console.log('user id is ' + userId);
+        var query = {
+            date: currentDate,
+            benefitId: benefit.id,
+            userId: userId,
+        };
+        var entry = new JournalEntry({
+            date: currentDate,
+            benefitId: benefit.id,
+            userId: userId,
+            score: benefit.score
+        });
+
+        entry.save(function(err, result) {
+            if (err) {
+                console.log(err);
+                res.json(err);
+            }
+            console.log(result);
+            res.send(result);
+        });
+        return;
+
+//        console.log('benefit');
+//        console.log(BenefitJournal);
+///        console.log(JSON.stringify(benefit));
+
+//        console.log(JSON.stringify(query));
+
+        var error = {};
+        console.log("updating now!");
+        JournalEntry.update(query, {"$set": {score: benefit.score}}, {upsert: true},
+        function(err, numAffected) {
+            console.log(err);
+            console.log("Number affected:");
+            console.log(numAffected);
+            error = err;
+        });
+        if (error !== {}) {
+            res.send(error);
+        }
+    });
+
+
+
     app.delete('/api/supps/:supp_id', function(req, res) {
         Supp.remove({
             _id: req.params.supp_id
