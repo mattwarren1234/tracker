@@ -65,7 +65,8 @@ angular.module('JournalCtrl', [])
         return {
             restrict: 'AEC',
             scope: {
-                score: '='
+                score: '=',
+                date: '='
             },
             link: function(scope, element, attrs) {
                 scope.date = scope.$parent.currentDate;

@@ -41,29 +41,21 @@ module.exports = function(app, router) {
             benefitId: benefit.id,
             userId: userId,
         };
-        var entry = new JournalEntry({
-            date: currentDate,
-            benefitId: benefit.id,
-            userId: userId,
-            score: benefit.score
-        });
-
-        entry.save(function(err, result) {
-            if (err) {
-                console.log(err);
-                res.json(err);
-            }
-            console.log(result);
-            res.send(result);
-        });
-        return;
-
-//        console.log('benefit');
-//        console.log(BenefitJournal);
-///        console.log(JSON.stringify(benefit));
-
-//        console.log(JSON.stringify(query));
-
+//        var entry = new JournalEntry({
+//            date: currentDate,
+//            benefitId: benefit.id,
+//            userId: userId,
+//            score: benefit.score
+//        });
+//
+//        entry.save(function(err, result) {
+//            if (err) {
+//                console.log(err);
+//                res.json(err);
+//            }
+//            console.log(result);
+//            res.send(result);
+//        });
         var error = {};
         console.log("updating now!");
         JournalEntry.update(query, {"$set": {score: benefit.score}}, {upsert: true},
