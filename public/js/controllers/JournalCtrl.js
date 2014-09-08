@@ -9,61 +9,56 @@ angular.module('JournalCtrl', [])
         $scope.userId = 2;
         var journalValue = function(benefitId, journalEntries) {
             for (var i = 0; i < journalEntries.length; i++) {
-                if (journalEntries[i].benefitId === benefit._id) {
+                if (journalEntries[i].benefitId === benefitId) {
                     return journalEntries[i].score;
                 }
             }
             return -1;
         };
-        Supps.get()
-            .success(function(data) {
-                var suppList = data;
-                //we don't have a benefit score so we need to set it.
-                suppList.forEach(function(supp) {
-                    supp.benefits = supp.benefits.map(function(benefit) {
-                        if (benefit.score === undefined) {
-                            benefit.score = 0.5;
-                        }
-                        return benefit;
-                    });
-                });
-                $scope.supps = suppList;
-                Journal.get(
-                    {date: $scope.currentDate,
-                        userId: $scope.userId}
-                ).success(function(journalEntries) {
-                    $scope.supps.forEach(function(supp) {
-                        supp.benefits.forEach(function(benefit) {
-                            var newScore = journalValue(benefit._id, journalEntries) ;
-                            if (newScore !== -1) { benefit.score = newScore; }
-                        });
-                    });
+        $scope.updateWithJournalValues = function(journalEntries) {
+            $scope.supps.forEach(function(supp) {
+                supp.benefits.forEach(function(benefit) {
+                    var newScore = journalValue(benefit._id, journalEntries);
+                    if (newScore !== -1) {
+                        benefit.score = newScore;
+                    }
                 });
             });
-
-        $scope.getData = function() {
-            Journal.get($scope.currentDate)
+        };
+        $scope.addDefaultScore = function(benefit) {
+            if (benefit.score === undefined) {
+                benefit.score = 5;
+            }
+            return benefit;
+        };
+        
+        $scope.getTodaysJournal = function() {
+            Supps.get()
                 .success(function(data) {
-                    $scope.supps = data;
-                    if (Array.isArray(data)) {
-                        $scope.supps = data;
-                    } else {
-                        $scope.supps = [data];
-                    }
-                })
-                .error(function(data) {
+                    var suppList = data;
+                    //we don't have a benefit score so we need to set it.
+                    suppList.forEach(function(supp) {
+                        supp.benefits = supp.benefits.map($scope.addDefaultScore);
+                    });
+                    $scope.supps = suppList;
+                    Journal.get(
+                        {date: $scope.currentDate,
+                            userId: $scope.userId}
+                    ).success(function(journalEntries) {
+                        $scope.updateWithJournalValues(journalEntries);
+                    });
                 });
         };
 
-//        $scope.getData();
+        $scope.getTodaysJournal();
 
         $scope.previousDay = function() {
             $scope.currentDate.setDate($scope.currentDate.getDate() - 1);
-            $scope.getData();
+            $scope.getTodaysJournal();
         };
         $scope.nextDay = function() {
             $scope.currentDate.setDate($scope.currentDate.getDate() + 1);
-            $scope.getData();
+            $scope.getTodaysJournal();
         };
     })
     .directive('star', function(Journal) {
@@ -80,16 +75,8 @@ angular.module('JournalCtrl', [])
                     return (value * 10) / 2;
                 };
                 scope.$watch("score", function(value) {
-                    console.log("new value is " + value);
                     $(element).raty('score', value);
                 })
-                scope.$watch(attrs.score, function(value) {
-                    console.log("changed yo!");
-                });
-                scope.saveRating = function() {
-                    console.log($(element).raty('score'));
-                    console.log("about to save rating!");
-                };
                 scope.onClick = function(score, event) {
                     var benefit = {id: element.scope().benefit._id,
                         score: score};
