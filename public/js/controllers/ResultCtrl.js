@@ -1,2 +1,4 @@
 angular.module('ResultCtrl', [])
-    .controller('ResultsController', function($scope, Supps) {});
+    .controller('ResultController', function($scope, Supps) {
+        
+    });
