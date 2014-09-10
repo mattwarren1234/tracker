@@ -2,8 +2,9 @@ angular.module('JournalCtrl', [])
     .controller('JournalController', function($scope, $timeout, Supps, Journal) {
 //        $scope.currentDate = new Date();
         var today = new Date();
-        $scope.currentDate = new Date();
-//        $scope.currentDate = new Date(today.getYear(), today.getMonth(), today.getDay())
+        $scope.todayFormatted = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        $scope.currentDate =  new Date($scope.todayFormatted);
+//      $scope.currentDate = new Date(today.getYear(), today.getMonth(), today.getDay())
         $scope.supps = [];
         $scope.journalIndex = 0;
         $scope.userId = 2;
@@ -31,9 +32,9 @@ angular.module('JournalCtrl', [])
             }
             return benefit;
         };
-        
+
         $scope.getTodaysJournal = function() {
-            Supps.get()
+            Supps.get({date: $scope.currentDate, userId: $scope.userId})
                 .success(function(data) {
                     var suppList = data;
                     //we don't have a benefit score so we need to set it.
@@ -51,12 +52,17 @@ angular.module('JournalCtrl', [])
         };
 
         $scope.getTodaysJournal();
-
+        $scope.goToToday = function() {
+            var today = new Date();
+            $scope.currentDate.setDate(today.getDate());
+            $scope.getTodaysJournal();
+        };
         $scope.previousDay = function() {
             $scope.currentDate.setDate($scope.currentDate.getDate() - 1);
             $scope.getTodaysJournal();
         };
         $scope.nextDay = function() {
+
             $scope.currentDate.setDate($scope.currentDate.getDate() + 1);
             $scope.getTodaysJournal();
         };

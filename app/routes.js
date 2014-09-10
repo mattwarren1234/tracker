@@ -14,10 +14,15 @@ module.exports = function(app, router) {
 
     app.get('/api/journal/', function(req, res) {
         var currentDate = new Date(parseInt(req.query.date));
-        var formattedDate = new Date(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay());
-        var tomorrow = new Date();
+        var formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+//        console.log('checking for currentDate.getDay()' + formattedDate);
+        var tomorrow = new Date(formattedDate);
         tomorrow.setDate(formattedDate.getDate() + 1);
+        tomorrow.setHours(0);
         var userId = req.query.userId || -1;
+        console.log("formattedDate" + formattedDate);
+        console.log("tomorrow: " + tomorrow);
+        
         JournalEntry.find(
             {date: {$gte: formattedDate, $lt: tomorrow},
                 userId: userId},
