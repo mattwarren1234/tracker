@@ -22,7 +22,7 @@ module.exports = function(app, router) {
         var userId = req.query.userId || -1;
         console.log("formattedDate" + formattedDate);
         console.log("tomorrow: " + tomorrow);
-        
+
         JournalEntry.find(
             {date: {$gte: formattedDate, $lt: tomorrow},
                 userId: userId},
@@ -36,7 +36,6 @@ module.exports = function(app, router) {
     });
 
     app.post('/api/journal/', function(req, res) {
-
         var currentDate = req.body.date;
         var userId = req.body.userId || 0;
         var benefit = req.body.benefit;
@@ -46,21 +45,6 @@ module.exports = function(app, router) {
             benefitId: benefit.id,
             userId: userId,
         };
-//        var entry = new JournalEntry({
-//            date: currentDate,
-//            benefitId: benefit.id,
-//            userId: userId,
-//            score: benefit.score
-//        });
-//
-//        entry.save(function(err, result) {
-//            if (err) {
-//                console.log(err);
-//                res.json(err);
-//            }
-//            console.log(result);
-//            res.send(result);
-//        });
         var error = {};
         console.log("updating now!");
         JournalEntry.update(query, {"$set": {score: benefit.score}}, {upsert: true},
@@ -75,7 +59,22 @@ module.exports = function(app, router) {
         }
     });
 
-
+    app.get('/api/records/all', function(req, res) {
+        JournalEntry.aggregate(
+            [
+                {$match: {userId: 2}, },
+                {$group: {
+                        _id: "$benefitId",
+                        avgScore: {$avg: "$score"}
+                    }
+                }],
+        function(err, results) {
+            if (err)
+                res.send(err);
+            console.log("success");
+            res.json(results); // [ { maxBalance: 98000 } ]
+        });
+    });
 
     app.delete('/api/supps/:supp_id', function(req, res) {
         Supp.remove({

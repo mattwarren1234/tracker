@@ -6,6 +6,9 @@ angular.module('JournalService', []).factory('Journal', ['$http', function($http
             },
             save: function(journalLog) {
                 return $http.post('/api/journal/', journalLog);
+            },
+            averages: function(userId) {
+                return $http.get('/api/records/all', {params: {userId: userId}});
             }
         };
     }]);

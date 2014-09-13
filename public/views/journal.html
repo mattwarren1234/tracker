@@ -1,6 +1,7 @@
 <div class="jumbotron text-center">
     <h1>Journal</h1>
     <div>
+        <button ng-click="testCall">testcall</button>
         <p>{{currentDate| date : 'longDate'}}</p>
         <p>Day <strong>{{journalIndex + 1}}</strong> of <strong>30</strong></p>
         <h5><a href="" ng-show="currentDate.getTime() !== todayFormatted.getTime()" ng-click="goToToday()">(go to today)</a></h5>

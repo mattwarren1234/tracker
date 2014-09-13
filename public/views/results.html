@@ -1,3 +1,12 @@
 <div class="jumbotron text-center"> 
-    <bars-chart chart-data="myData"></bars-chart>
+    <h3>Results</h3>
+            <button ng-click="testCall()">testcall</button>
+
+    <div class="center-block">
+        <div ng-repeat="supp in supps">
+             <h2> {{supp.name}} : Average noted benefit</h2>
+            <bars-chart chart-data="supp.benefits"></bars-chart>
+        </div>
+
+    </div>
 </div>

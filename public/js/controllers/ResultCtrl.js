@@ -1,8 +1,42 @@
 "use strict";
 angular.module('ResultCtrl', [])
-    .controller('ResultController', function($scope, Supps) {
-//        $scope.myData = [{"id": "1"}, {"id": "2"}];
-        $scope.myData = [10, 20, 30, 40, 60];
+    .controller('ResultController', function($scope, Supps, Journal) {
+//        $scope.supps = [
+//            {name: "Fish Oil",
+//                benefits: [
+//                ]}];
+        $scope.supps = [
+            {name: "Fish Oil",
+                benefits: [
+                    {name: "benefit 1 ",
+                        score: 30},
+                    {name: "benefit 2 ",
+                        score: 50},
+                    {name: "ben 3",
+                        score: 20}
+                ]}
+        ];
+//        $scope.supps
+        var asBenefit = function(benefit) {
+            return {_id: benefit._id,
+                score: benefit.avgScore};
+        };
+        $scope.testCall = function() {
+            Journal.averages(2)
+                .success(function(data) {
+//                    $scope.supps[0].benefits = [];
+//                    console.log("ahhh ");
+//                    $scope.supps[0].benefits = {};
+                    var newBenefits = [{benefitId: 2,
+                            name: "oh, god",
+                            score: 10}];
+                    $scope.supps[0].benefits = newBenefits;
+                    return;
+                    data.forEach(function(ben) {
+                        $scope.supps[0].benefits.push(asBenefit(ben));
+                    });
+                });
+        };
     })
     .directive('barsChart', function($parse) {
         //based on this: 
@@ -20,26 +54,57 @@ angular.module('ResultCtrl', [])
             //passed thru chart-data attribute
             scope: {data: '=chartData'},
             link: function(scope, element, attrs) {
-                //in D3, any selection[0] contains the group
-                //selection[0][0] is the DOM node
-                //but we won't need that this time
-                var chart = d3.select(element[0]);
-                //to our original directive markup bars-chart
-                //we add a div with out chart stling and bind each
-                //data entry to the chart
-                chart.append("div").attr("class", "chart")
-                    .selectAll('div')
-                    .data(scope.data).enter().append("div")
-                    .transition().ease("elastic")
-                    .style("width", function(d) {
-                        return d + "%";
-                    })
-                    .text(function(d) {
-                        return d + "%";
-                    });
-                //a little of magic: setting it's width based
-                //on the data value (d) 
-                //and text all with a smooth transition
+                var chart = d3.select(element[0])
+                    .append("div").attr("class", "chart");
+
+//                var barGraph = chart
+//                    .selectAll('div')
+//                    .data(scope.data);
+//
+//                barGraph.enter()
+//                    .append("div")
+//                    .transition().ease("elastic")
+//                    .style("width", function(d) {
+//                        return d.score + "%";
+//                    })
+//                    .text(function(d) {
+//                        return d.name + "%";
+//                    });
+                    
+                scope.$watch('data', function(newVal, oldVal) {
+                    var barGraph = chart
+                        .selectAll('div')
+                        .data(newVal);
+
+                    barGraph.enter()
+                        .append("div")
+                        .transition().ease("elastic")
+                        .style("width", function(d) {
+                            return d.score + "%";
+                        })
+                        .text(function(d) {
+                            return d.name + "%";
+                        });
+
+                    barGraph
+                        .transition().ease("elastic")
+                        .style("width", function(d) {
+                            return d.score + "%";
+                        })
+                        .text(function(d) {
+                            return d.name + "%";
+                        });
+                        
+                    barGraph
+                        .exit()
+                        .remove();
+                });
+
+
+
+
+
+
             }
         };
     });

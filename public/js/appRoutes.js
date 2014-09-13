@@ -13,7 +13,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
                 templateUrl: 'views/journal.html',
                 controller: 'JournalController'
             })
-                .when('/results', {
+            .when('/results', {
                 templateUrl: 'views/results.html',
                 controller: 'ResultController'
             });
