@@ -17,15 +17,22 @@ angular.module('ResultCtrl', [])
             }
             return benefit;
         };
+        $scope.getAverageValues = function() {
+            var userId = 2;
+            Journal.averages(userId)
+                .success(function(data) {
+                    $scope.updateWithJournalValues(data);
+                });
+        };
         Supps.get({userId: $scope.userId})
             .success(function(suppList) {
                 suppList.forEach(function(supp) {
                     supp.benefits = supp.benefits.map($scope.addDefaultScore);
                 });
                 $scope.supps = suppList;
+                $scope.getAverageValues();
             });
 
-//        $scope.supps
         var asBenefit = function(benefit) {
             return {_id: benefit._id,
                 score: benefit.avgScore};
@@ -46,31 +53,14 @@ angular.module('ResultCtrl', [])
                     if (newScore !== -1) {
                         benefit.score = newScore;
                     }
-                    console.log("benefit score is "  + benefit.score);
+                    console.log("benefit score is " + benefit.score);
                     newBenefits.push(benefit);
                 });
                 supp.benefits = newBenefits;
             });
         };
         $scope.testCall = function() {
-            var userId = 2;
-            Journal.averages(userId)
-                .success(function(data) {
-                    $scope.updateWithJournalValues(data);
-//                    for (var i = 0; i < data.length; i++) {
-//
-//                    }
-//
-//
-//                    var newBenefits = [{benefitId: 2,
-//                            name: "oh, god",
-//                            score: 10}];
-//                    $scope.supps[0].benefits = newBenefits;
-//                    return;
-//                    data.forEach(function(ben) {
-//                        $scope.supps[0].benefits.push(asBenefit(ben));
-//                    });
-                });
+          $scope.getAverageValues();
         };
     })
     .directive('barsChart', function($parse) {
@@ -100,7 +90,7 @@ angular.module('ResultCtrl', [])
                         return percentage * 100;
                     };
                     var barText = function(d) {
-                        return d.description + " : " + scoreAsPercent(d.score) + "%";
+                        return d.description + " : " + scoreAsPercent(d.score).toFixed(0) + "%";
                     };
                     var barStyle = function(d) {
                         return scoreAsPercent(d.score) + "%";
