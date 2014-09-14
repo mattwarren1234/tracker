@@ -62,12 +62,16 @@ module.exports = function(app, router) {
     app.get('/api/records/all', function(req, res) {
         JournalEntry.aggregate(
             [
-                {$match: {userId: 2}, },
+                {$match: {userId: 2} },
                 {$group: {
                         _id: "$benefitId",
-                        avgScore: {$avg: "$score"}
+                        score: {$avg: "$score"}
                     }
-                }],
+                },
+                {$project: {score:1,
+                        _id: 0,
+                        "benefitId" : "$_id"}}
+            ],
         function(err, results) {
             if (err)
                 res.send(err);
