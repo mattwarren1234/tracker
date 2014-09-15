@@ -9,6 +9,9 @@ angular.module('JournalService', []).factory('Journal', ['$http', function($http
             },
             averages: function(userId) {
                 return $http.get('/api/records/all', {params: {userId: userId}});
+            },
+            overTime: function(userId){
+                return $http.get('/api/records/overTime', {params: {userId: userId}});
             }
         };
     }]);

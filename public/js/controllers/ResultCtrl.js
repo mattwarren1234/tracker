@@ -2,7 +2,6 @@
 angular.module('ResultCtrl', [])
     .controller('ResultController', function($scope, Supps, Journal) {
         $scope.supps = [];
-
         var scoreAdapter = function(supps) {
             return supps.map(function(supp) {
                 return supp.benefits.map(function(benefit) {
@@ -60,7 +59,10 @@ angular.module('ResultCtrl', [])
             });
         };
         $scope.testCall = function() {
-            $scope.getAverageValues();
+          Journal.overTime()
+              .success(function(data){
+                  console.log(data);
+              });
         };
     })
     .directive('barsChart', function() {

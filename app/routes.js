@@ -1,6 +1,5 @@
 var Supp = require('./models/supp');
 var JournalEntry = require('./models/journal');
-
 module.exports = function(app, router) {
     app.get('/api/supps', function(req, res) {
         //use mongoose : find all nerds in db
@@ -8,10 +7,8 @@ module.exports = function(app, router) {
             if (err)
                 res.send(err);
             res.json(supps);
-
         });
     });
-
     app.get('/api/journal/', function(req, res) {
         var currentDate = new Date(parseInt(req.query.date));
         var formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
@@ -22,7 +19,6 @@ module.exports = function(app, router) {
         var userId = req.query.userId || -1;
         console.log("formattedDate" + formattedDate);
         console.log("tomorrow: " + tomorrow);
-
         JournalEntry.find(
             {date: {$gte: formattedDate, $lt: tomorrow},
                 userId: userId},
@@ -32,9 +28,7 @@ module.exports = function(app, router) {
             res.send(results);
             console.log(results);
         });
-
     });
-
     app.post('/api/journal/', function(req, res) {
         var currentDate = req.body.date;
         var userId = req.body.userId || 0;
@@ -58,38 +52,56 @@ module.exports = function(app, router) {
             res.send(error);
         }
     });
-
     app.get('/api/records/all', function(req, res) {
         JournalEntry.aggregate(
             [
-                {$match: {userId: 2} },
+                {$match: {userId: 2}},
                 {$group: {
                         _id: "$benefitId",
                         score: {$avg: "$score"}
                     }
                 },
-                {$project: {score:1,
+                {$project: {score: 1,
                         _id: 0,
-                        "benefitId" : "$_id"}}
+                        "benefitId": "$_id"}}
             ],
-        function(err, results) {
-            if (err)
-                res.send(err);
-            console.log("success");
-            res.json(results); // [ { maxBalance: 98000 } ]
-        });
+            function(err, results) {
+                if (err)
+                    res.send(err);
+                console.log("success");
+                res.json(results); // [ { maxBalance: 98000 } ]
+            });
     });
-
+    app.get('/api/records/overTime', function(req, res) {
+        JournalEntry.aggregate(
+            [
+                {$match: {userId: 2}},
+                {$group: {
+                        _id: "$benefitId",
+                        scores : {$push : 
+                                {score : "$score",
+                                date: "$date"}} 
+                    }
+                },
+//                {$project: {score: 1,
+//                        _id: 0,
+//                        "benefitId": "$_id"}}
+            ],
+            function(err, results) {
+                if (err)
+                    res.send(err);
+                console.log("success");
+                res.json(results); // [ { maxBalance: 98000 } ]
+            });
+    });
     app.delete('/api/supps/:supp_id', function(req, res) {
         Supp.remove({
             _id: req.params.supp_id
         }, function(err, supp) {
             if (err)
                 res.send(err);
-
             res.json(supp);
         });
-
     });
     app.post('/api/supps/:supp_id', function(req, res) {
         var supp_data = {
@@ -104,7 +116,6 @@ module.exports = function(app, router) {
                 return handleError(err);
             res.send(supp);
         });
-
     });
     app.post('/api/supps', function(req, res) {
         var supp = new Supp();
@@ -126,7 +137,6 @@ module.exports = function(app, router) {
                     res.json(data);
                 }
             });
-
         } catch (err) {
             console.log(err);
         }
@@ -138,5 +148,4 @@ module.exports = function(app, router) {
     app.get('*', function(req, res) {
         res.sendfile('./public/index.html');
     });
-
 };
