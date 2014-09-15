@@ -4,7 +4,6 @@ angular.module('JournalCtrl', [])
         var today = new Date();
         $scope.todayFormatted = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         $scope.currentDate = new Date($scope.todayFormatted);
-//      $scope.currentDate = new Date(today.getYear(), today.getMonth(), today.getDay())
         $scope.supps = [];
         $scope.journalIndex = 0;
         $scope.userId = 2;
@@ -16,6 +15,7 @@ angular.module('JournalCtrl', [])
             }
             return -1;
         };
+        //used in this + result
         $scope.updateWithJournalValues = function(journalEntries) {
             $scope.supps.forEach(function(supp) {
                 supp.benefits.forEach(function(benefit) {
