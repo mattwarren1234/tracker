@@ -19,20 +19,34 @@
   color: white;
   box-shadow: 2px 2px 2px #666;
 }
-
+/*
 .axis path,
 .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
-}
-
+}*/
+/*
 .x.axis path {
   display: none;
-}
+}*/
 
 .line {
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5px;
+}
+
+path { 
+    stroke: steelblue;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
 }

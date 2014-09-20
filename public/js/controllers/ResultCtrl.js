@@ -2,7 +2,36 @@
 angular.module('ResultCtrl', [])
     .controller('ResultController', function($scope, Supps, Journal) {
         $scope.supps = [];
-        var scoreAdapter = function(supps) {
+        $scope.userId = 2;
+        $scope.overTimeList = [];
+        $scope.showLineGraph = function(supp) {
+            Journal.overTime(
+                {userId: $scope.userId,
+                    suppId: supp._id}
+            )
+                .success(function(data) {
+                    data.forEach(function(item) {
+                        item.name = $scope.getBenefitName(item._id);
+                    });
+                    $scope.overTimeList = data;
+                    //now what
+//              now i have list: id
+//"54038549355ec805061912f9"
+//_id: "54038549355ec805061912f9"scores: Array[2]0: Object1: Objectdate: "2014-09-13T07:00:00.000Z"score: 3.7764154297392767__proto__: Objectlength: 2__proto__: Array[0]
+//x label = find name
+                });
+        };
+
+        $scope.getBenefitName = function(benefitId) {
+            for (var i = 0; i < $scope.supps.length; i++) {
+                if ($scope.supps._id === benefitId) {
+                    return $scope.supps[i].name;
+                }
+            }
+            return "[No name]";
+        };
+
+        $scope.scoreAdapter = function(supps) {
             return supps.map(function(supp) {
                 return supp.benefits.map(function(benefit) {
                     benefit.score = 0;
@@ -17,8 +46,7 @@ angular.module('ResultCtrl', [])
             return benefit;
         };
         $scope.getAverageValues = function() {
-            var userId = 2;
-            Journal.averages(userId)
+            Journal.averages($scope.userId)
                 .success(function(data) {
                     $scope.updateWithJournalValues(data);
                 });
@@ -52,17 +80,17 @@ angular.module('ResultCtrl', [])
                     if (newScore !== -1) {
                         benefit.score = newScore;
                     }
-                    console.log("benefit score is " + benefit.score);
                     newBenefits.push(benefit);
                 });
                 supp.benefits = newBenefits;
             });
         };
         $scope.testCall = function() {
-          Journal.overTime()
-              .success(function(data){
-                  console.log(data);
-              });
+            if ($scope.supps.length === 0) {
+                console.log("no supps, brah. returning");
+                return;
+            }
+            $scope.showLineGraph($scope.supps[0]);
         };
     })
     .directive('barsChart', function() {
@@ -196,6 +224,81 @@ angular.module('ResultCtrl', [])
                         .attr("d", line);
                 });
 
+
+            }
+        };
+    })
+    .directive('multiLineGraph', function() {
+        return {
+            restrict: 'E',
+            replace: false,
+            scope: {data: '=chartData'},
+            link: function(scope, element, attrs) {
+                var parseDate = function(dateString) {
+                    return new Date(dateString);
+                };
+                //stating what our range is going to be - so x min will map to 0, x max will map to width. note that we haven't yet stated what our max values will be.
+                var width = element.parent()[0].offsetWidth * .9;// + 'px'
+                var height = 0;
+                var parentHeight = element.parent()[0].offsetHeight * 0.9;
+                if (parentHeight === 0) {
+                    height = 200 ;//+ 'px';
+                } else {
+                    height = parentHeight;
+                }
+                var x = d3.time.scale().range([0, width]);
+                var y = d3.scale.linear().range([height, 0]);
+                var xAxis = d3.svg.axis().scale(x)
+                    .orient("bottom").ticks(10);
+                var yAxis = d3.svg.axis().scale(y)
+                    .orient("left").ticks(5);
+
+                var scoreline = d3.svg.line()
+                    .x(function(d) {
+                        return x(d.date);
+                    })
+                    .y(function(d) {
+                        return y(d.score);
+                    });
+
+                var svg = d3.select(element[0])
+                    .append("svg")
+                    .append("g");
+
+                scope.$watch('data', function(newVal, oldVal) {
+                    newVal.scores.forEach(function(d) {
+                        d.date = parseDate(d.date);
+                        d.score = +d.score;
+                    });
+                    x.domain(d3.extent(newVal, function(d) {
+                        return d.date;
+                    }));
+                    y.domain([0, d3.max(newVal, function(d) {
+                            return d.score;
+                        })]);
+//                    newVal.forEach(function)
+                    var dataNest = d3.nest()
+                        .key(function(d) {
+                            return d.symbol;
+                        })
+                        .entries(newVal);
+
+                    dataNest.forEach(function(d) {
+                        svg.append("path")
+                            .attr("class", "line")
+                            .attr("d", scoreline(d.values));
+                    });
+
+                    svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis);
+                    svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis);
+
+                });
+// scope.$watch('data', function(newVal, oldVal) {}
 
             }
         };

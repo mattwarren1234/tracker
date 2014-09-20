@@ -73,9 +73,11 @@ module.exports = function(app, router) {
             });
     });
     app.get('/api/records/overTime', function(req, res) {
+        var userId = req.params.userId;
+        var suppId = req.params.suppId;
         JournalEntry.aggregate(
             [
-                {$match: {userId: 2}},
+                {$match: {userId: userId}},
                 {$group: {
                         _id: "$benefitId",
                         scores : {$push : 
@@ -83,9 +85,6 @@ module.exports = function(app, router) {
                                 date: "$date"}} 
                     }
                 },
-//                {$project: {score: 1,
-//                        _id: 0,
-//                        "benefitId": "$_id"}}
             ],
             function(err, results) {
                 if (err)
