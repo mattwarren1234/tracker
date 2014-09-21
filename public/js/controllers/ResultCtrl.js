@@ -267,13 +267,9 @@ angular.module('ResultCtrl', [])
 
                 var scoreline = d3.svg.line()
                     .x(function(d) {
-                        console.log("ate is " + d.date);
-                        console.log("x: " + x(d.date));
-                        console.log(x);
                         return x(d.date);
                     })
                     .y(function(d) {
-                        console.log("y: " + y(d.score));
                         return y(d.score);
                     });
 //                var svg = d3.select(element[0])
@@ -299,17 +295,18 @@ angular.module('ResultCtrl', [])
                         item.score = +item.score;
                     });
                     x.domain(d3.extent(benefit.scores, function(d) {
-                        console.log("domain : date is " + d.date);
                         return d.date;
                     }));
                     y.domain([0, d3.max(benefit.scores, function(d) {
                             return d.score;
                         }) + 1]);
+                    console.log("adding id of tag" + index)
                     svg.append("path")
                         .attr("class", "line")
                         .style("stroke", function() {
                             return benefit.color = color(index);
                         })
+                        .attr('id', ("tag" + index))
                         .attr("d", scoreline(benefit.scores));
 
                     svg.append("text")                                    // *******
@@ -319,7 +316,23 @@ angular.module('ResultCtrl', [])
                         .style("fill", function() { // dynamic colours    // *******
                             return benefit.color = color(index);
                         })             // *******
-                        .text(benefit.name);
+                        .text(benefit.name)
+                        .on("click", function() {
+                            var active = benefit.active ? false : true;
+                            var newOpacity = active ? 0 : 1;
+                            if (newOpacity === 0) {
+                                console.log("fading out, fadin bruh for " + index);
+                            }else{
+                                console.log("new opacity is ! " + index);
+                            }
+                            console.log('searching for tag' + index);
+                            d3.select("#tag" + index)
+                                .transition().duration(100)          // ************
+                                .style("opacity", newOpacity);       // ************
+                            // Update whether or not the elements are active
+                            benefit.active = active;
+                        })
+                        ;
                 });
                 svg.append("g")
                     .attr("class", "x axis")

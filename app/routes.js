@@ -75,6 +75,7 @@ module.exports = function(app, router) {
         JournalEntry.aggregate(
             [
                 {$match: {userId: userId}},
+                {$sort : {date: 1}},
                 {$group: {
                         _id: "$benefitId",
                         scores: {$push:
