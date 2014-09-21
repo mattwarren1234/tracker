@@ -13,7 +13,8 @@ angular.module('ResultCtrl', [])
                     data.forEach(function(item) {
                         item.name = $scope.getBenefitName(item._id);
                     });
-                    $scope.overTimeList = data;
+                    console.log("over time list updated");
+                    $scope.overTimeList.push(data);
                     //now what
 //              now i have list: id
 //"54038549355ec805061912f9"
@@ -238,14 +239,19 @@ angular.module('ResultCtrl', [])
                     return new Date(dateString);
                 };
                 //stating what our range is going to be - so x min will map to 0, x max will map to width. note that we haven't yet stated what our max values will be.
-                var width = element.parent()[0].offsetWidth * .9;// + 'px'
-                var height = 0;
-                var parentHeight = element.parent()[0].offsetHeight * 0.9;
-                if (parentHeight === 0) {
-                    height = 200 ;//+ 'px';
-                } else {
-                    height = parentHeight;
-                }
+//                var elWidth
+                var margin = {top: 30, right: 20, bottom: 30, left: 50},
+                width = 600 - margin.left - margin.right,
+                    height = 270 - margin.top - margin.bottom;
+
+//                var width = element.parent()[0].offsetWidth * .9;// + 'px'
+//                var height = 0;
+//                var parentHeight = element.parent()[0].offsetHeight * 0.9;
+//                if (parentHeight === 0) {
+//                    height = 200;//+ 'px';
+//                } else {
+//                    height = parentHeight;
+//                }
                 var x = d3.time.scale().range([0, width]);
                 var y = d3.scale.linear().range([height, 0]);
                 var xAxis = d3.svg.axis().scale(x)
@@ -255,48 +261,78 @@ angular.module('ResultCtrl', [])
 
                 var scoreline = d3.svg.line()
                     .x(function(d) {
+                        console.log("ate is " + d.date);
+                        console.log("x: " + x(d.date));
+                        console.log(x);
                         return x(d.date);
                     })
                     .y(function(d) {
+                        console.log("y: " + y(d.score));
                         return y(d.score);
                     });
+//                var svg = d3.select(element[0])
+//                    .append("svg")
+//                    .attr("width", width)// + margin.left + margin.right)
+//                    .append("g");
 
                 var svg = d3.select(element[0])
                     .append("svg")
-                    .append("g");
-
-                scope.$watch('data', function(newVal, oldVal) {
-                    newVal.scores.forEach(function(d) {
-                        d.date = parseDate(d.date);
-                        d.score = +d.score;
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
+//                scope.data
+                scope.data.forEach(function(benefit) {
+                    //  d.date = parseDate(d.date);
+                    // d.score = +d.score;
+                    benefit.scores.forEach(function(item) {
+                        item.date = parseDate(item.date);
+                        item.score = +item.score;
                     });
-                    x.domain(d3.extent(newVal, function(d) {
+                    x.domain(d3.extent(benefit.scores, function(d) {
+                        console.log("domain : date is " + d.date);
                         return d.date;
                     }));
-                    y.domain([0, d3.max(newVal, function(d) {
+                    y.domain([0, d3.max(benefit.scores, function(d) {
+                            console.log("domain: score is " + d.score);
                             return d.score;
                         })]);
-//                    newVal.forEach(function)
-                    var dataNest = d3.nest()
-                        .key(function(d) {
-                            return d.symbol;
-                        })
-                        .entries(newVal);
+                    svg.append("path")
+                        .attr("class", "line")
+                        .attr("d", scoreline(benefit.scores));
+                });
+                svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
 
-                    dataNest.forEach(function(d) {
-                        svg.append("path")
-                            .attr("class", "line")
-                            .attr("d", scoreline(d.values));
-                    });
 
-                    svg.append("g")
-                        .attr("class", "x axis")
-                        .attr("transform", "translate(0," + height + ")")
-                        .call(xAxis);
-                    svg.append("g")
-                        .attr("class", "y axis")
-                        .call(yAxis);
+                svg.append("g")
+                    .attr("class", "y axis")
+                    .call(yAxis);
 
+                scope.$watch('data', function(newVal, oldVal) {
+                    return;
+                    /*
+                     newVal.scores.forEach(function(d) {
+                     d.date = parseDate(d.date);
+                     d.score = +d.score;
+                     console.log("initial parsing: date set to " + d.date + ", score set to " + d.score);
+                     });
+                     x.domain(d3.extent(newVal, function(d) {
+                     console.log("domain : date is " + d.date);
+                     return d.date;
+                     }));
+                     y.domain([0, d3.max(newVal, function(d) {
+                     console.log("domain: score is " + d.score);
+                     return d.score;
+                     })]);
+                     svg.append("path")
+                     .attr("class", "line")
+                     .attr("d", scoreline(newVal.scores));
+                     
+                     */
                 });
 // scope.$watch('data', function(newVal, oldVal) {}
 
