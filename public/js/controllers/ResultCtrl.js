@@ -10,8 +10,11 @@ angular.module('ResultCtrl', [])
                     suppId: supp._id}
             )
                 .success(function(data) {
-                    data.forEach(function(item) {
+                    data.forEach(function(item, index) {
                         item.name = $scope.getBenefitName(item._id);
+                        if (item.name == "") {
+                            item.name = "Benefit " + index;
+                        }
                     });
                     console.log("num of items in journal over time query: " + data.length);
                     $scope.overTimeList.push(data);
@@ -31,7 +34,7 @@ angular.module('ResultCtrl', [])
                     return $scope.supps[i].name;
                 }
             }
-            return "[No name]";
+            return "";
         };
 
         $scope.scoreAdapter = function(supps) {
@@ -237,15 +240,15 @@ angular.module('ResultCtrl', [])
             replace: false,
             scope: {data: '=chartData'},
             link: function(scope, element, attrs) {
+                var items = scope.data;
                 var parseDate = function(dateString) {
                     return new Date(dateString);
                 };
                 //stating what our range is going to be - so x min will map to 0, x max will map to width. note that we haven't yet stated what our max values will be.
 //                var elWidth
-                var margin = {top: 30, right: 20, bottom: 30, left: 50},
+                var margin = {top: 30, right: 20, bottom: 70, left: 50},
                 width = 600 - margin.left - margin.right,
-                    height = 270 - margin.top - margin.bottom;
-
+                    height = 300 - margin.top - margin.bottom;
 //                var width = element.parent()[0].offsetWidth * .9;// + 'px'
 //                var height = 0;
 //                var parentHeight = element.parent()[0].offsetHeight * 0.9;
@@ -285,8 +288,10 @@ angular.module('ResultCtrl', [])
                     .append("g")
                     .attr("transform",
                         "translate(" + margin.left + "," + margin.top + ")");
-//                scope.data
-                scope.data.forEach(function(benefit) {
+//                items
+                var color = d3.scale.category10();
+                var legendSpace = width / items.length;
+                items.forEach(function(benefit, index) {
                     //  d.date = parseDate(d.date);
                     // d.score = +d.score;
                     benefit.scores.forEach(function(item) {
@@ -298,12 +303,23 @@ angular.module('ResultCtrl', [])
                         return d.date;
                     }));
                     y.domain([0, d3.max(benefit.scores, function(d) {
-                            console.log("domain: score is " + d.score);
                             return d.score;
-                        })]);
+                        }) + 1]);
                     svg.append("path")
                         .attr("class", "line")
+                        .style("stroke", function() {
+                            return benefit.color = color(index);
+                        })
                         .attr("d", scoreline(benefit.scores));
+
+                    svg.append("text")                                    // *******
+                        .attr("x", (legendSpace / 2) + index * legendSpace) // spacing // ****
+                        .attr("y", height + (margin.bottom / 2) + 5)         // *******
+                        .attr("class", "legend")    // style the legend   // *******
+                        .style("fill", function() { // dynamic colours    // *******
+                            return benefit.color = color(index);
+                        })             // *******
+                        .text(benefit.name);
                 });
                 svg.append("g")
                     .attr("class", "x axis")
@@ -316,27 +332,7 @@ angular.module('ResultCtrl', [])
 
                 scope.$watch('data', function(newVal, oldVal) {
                     return;
-                    /*
-                     newVal.scores.forEach(function(d) {
-                     d.date = parseDate(d.date);
-                     d.score = +d.score;
-                     console.log("initial parsing: date set to " + d.date + ", score set to " + d.score);
-                     });
-                     x.domain(d3.extent(newVal, function(d) {
-                     console.log("domain : date is " + d.date);
-                     return d.date;
-                     }));
-                     y.domain([0, d3.max(newVal, function(d) {
-                     console.log("domain: score is " + d.score);
-                     return d.score;
-                     })]);
-                     svg.append("path")
-                     .attr("class", "line")
-                     .attr("d", scoreline(newVal.scores));
-                     
-                     */
                 });
-// scope.$watch('data', function(newVal, oldVal) {}
 
             }
         };
