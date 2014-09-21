@@ -4,7 +4,7 @@
         <multi-line-graph chart-data="item"/>
     </div>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#">Comparison</a></li>
+        <li active="true" ng-click=""><a href="">Comparison</a></li>
         <li ng-repeat="supp in supps"><a href="" ng-click="showLineGraph(supp)">{{supp.name}}</a></li>
     </ul>
     <div class="center-block">

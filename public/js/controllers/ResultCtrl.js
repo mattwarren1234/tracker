@@ -4,6 +4,8 @@ angular.module('ResultCtrl', [])
         $scope.supps = [];
         $scope.userId = 2;
         $scope.overTimeList = [];
+        $scope.tab = {};
+        $scope.tab.comparisonActive = true;
         $scope.showLineGraph = function(supp) {
             Journal.overTime(
                 {userId: $scope.userId,
