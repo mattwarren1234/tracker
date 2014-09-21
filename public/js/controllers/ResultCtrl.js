@@ -13,8 +13,10 @@ angular.module('ResultCtrl', [])
                     data.forEach(function(item) {
                         item.name = $scope.getBenefitName(item._id);
                     });
-                    console.log("over time list updated");
+                    console.log("num of items in journal over time query: " + data.length);
                     $scope.overTimeList.push(data);
+                    console.log("over time list updated. length is " + $scope.overTimeList.length);
+
                     //now what
 //              now i have list: id
 //"54038549355ec805061912f9"
@@ -256,6 +258,7 @@ angular.module('ResultCtrl', [])
                 var y = d3.scale.linear().range([height, 0]);
                 var xAxis = d3.svg.axis().scale(x)
                     .orient("bottom").ticks(10);
+
                 var yAxis = d3.svg.axis().scale(y)
                     .orient("left").ticks(5);
 
@@ -304,9 +307,8 @@ angular.module('ResultCtrl', [])
                 });
                 svg.append("g")
                     .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")")
+                    .attr("transform", "translate(0," + height + ")") //move it down to the bottom!
                     .call(xAxis);
-
 
                 svg.append("g")
                     .attr("class", "y axis")

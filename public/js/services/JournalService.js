@@ -11,6 +11,7 @@ angular.module('JournalService', []).factory('Journal', ['$http', function($http
                 return $http.get('/api/records/all', {params: {userId: userId}});
             },
             overTime: function(params){
+                console.log("posting userid : "+ params.userId);
                 return $http.get('/api/records/overTime', {params: {userId: params.userId, suppId : params.suppId}});
             }
         };

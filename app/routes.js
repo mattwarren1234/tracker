@@ -12,13 +12,10 @@ module.exports = function(app, router) {
     app.get('/api/journal/', function(req, res) {
         var currentDate = new Date(parseInt(req.query.date));
         var formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-//        console.log('checking for currentDate.getDay()' + formattedDate);
         var tomorrow = new Date(formattedDate);
         tomorrow.setDate(formattedDate.getDate() + 1);
         tomorrow.setHours(0);
         var userId = req.query.userId || -1;
-        console.log("formattedDate" + formattedDate);
-        console.log("tomorrow: " + tomorrow);
         JournalEntry.find(
             {date: {$gte: formattedDate, $lt: tomorrow},
                 userId: userId},
@@ -73,24 +70,25 @@ module.exports = function(app, router) {
             });
     });
     app.get('/api/records/overTime', function(req, res) {
-        var userId = req.params.userId;
-        var suppId = req.params.suppId;
+        var userId = parseInt(req.query.userId, 10);
+        var suppId = req.query.suppId;
         JournalEntry.aggregate(
             [
                 {$match: {userId: userId}},
                 {$group: {
                         _id: "$benefitId",
-                        scores : {$push : 
-                                {score : "$score",
-                                date: "$date"}} 
+                        scores: {$push:
+                                {score: "$score",
+                                    date: "$date"}}
                     }
                 },
             ],
             function(err, results) {
                 if (err)
+                {
                     res.send(err);
-                console.log("success");
-                res.json(results); // [ { maxBalance: 98000 } ]
+                }
+                res.json(results); 
             });
     });
     app.delete('/api/supps/:supp_id', function(req, res) {
