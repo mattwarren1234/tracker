@@ -16,15 +16,8 @@ angular.module('ResultCtrl', [])
                             item.name = "Benefit " + index;
                         }
                     });
-                    console.log("num of items in journal over time query: " + data.length);
-                    $scope.overTimeList.push(data);
-                    console.log("over time list updated. length is " + $scope.overTimeList.length);
-
-                    //now what
-//              now i have list: id
-//"54038549355ec805061912f9"
-//_id: "54038549355ec805061912f9"scores: Array[2]0: Object1: Objectdate: "2014-09-13T07:00:00.000Z"score: 3.7764154297392767__proto__: Objectlength: 2__proto__: Array[0]
-//x label = find name
+                    $scope.overTimeList = [data]
+//                    $scope.overTimeList.push(data);
                 });
         };
 
@@ -90,13 +83,6 @@ angular.module('ResultCtrl', [])
                 });
                 supp.benefits = newBenefits;
             });
-        };
-        $scope.testCall = function() {
-            if ($scope.supps.length === 0) {
-                console.log("no supps, brah. returning");
-                return;
-            }
-            $scope.showLineGraph($scope.supps[0]);
         };
     })
     .directive('barsChart', function() {
