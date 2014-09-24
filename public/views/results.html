@@ -7,11 +7,5 @@
         <li active="true" ng-click=""><a href="">Comparison</a></li>
         <li ng-repeat="supp in supps"><a href="" ng-click="showLineGraph(supp)">{{supp.name}}</a></li>
     </ul>
-    <nvd3 options="barOptions" data="testD3Data"></nvd3>
-    <div class="center-block">
-        <div ng-repeat="supp in supps">
-            <h2> {{supp.name}} : Average noted benefit</h2>
-            <!--            <bars-chart chart-data="supp.benefits"></bars-chart>-->
-        </div>
-    </div>
+    <nvd3 options="barOptions" data="formattedBenefits"></nvd3>
 </div>

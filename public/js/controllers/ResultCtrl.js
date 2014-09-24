@@ -6,42 +6,25 @@ angular.module('ResultCtrl', ['nvd3'])
         $scope.overTimeList = [];
         $scope.tab = {};
         $scope.tab.comparisonActive = true;
-
-        $scope.testD3Data = $scope.data = [
-            {
-                "key": "Series1",
-                "color": "#d62728",
-                "values": [
-                    {
-                        "label": "Group A",
-                        "value": -1.8746444827653
-                    },
-                    {
-                        "label": "Group B",
-                        "value": -8.0961543492239
-                    }
-                ]
-            },
-        ];
-
+        $scope.formattedBenefits = [];
         $scope.barOptions = {
             chart: {
                 "type": "multiBarHorizontalChart",
-                "height": 300,
+                "height": 200,
                 x: function(d) {
-                    return d.label;
+                    return d.description;
                 },
                 y: function(d) {
-                    return d.value;
+                    return d.score;
                 },
                 "showControls": false,
                 "showValues": true,
                 "transitionDuration": 500,
                 "xAxis": {
-                    "showMaxMin": false
+                    "showMaxMin": true
                 },
                 "yAxis": {
-                    "axisLabel": "Values"
+                    "axisLabel": "Average Score"
                 }}
 
         };
@@ -85,6 +68,7 @@ angular.module('ResultCtrl', ['nvd3'])
             }
             return benefit;
         };
+
         $scope.getAverageValues = function() {
             Journal.averages($scope.userId)
                 .success(function(data) {
@@ -98,13 +82,7 @@ angular.module('ResultCtrl', ['nvd3'])
                 });
                 $scope.supps = suppList;
                 $scope.getAverageValues();
-                setTimeout(function(){
-                      $scope.testD3Data[0].values.push({
-                    "label": "Group NEW",
-                    "value": -8.0961543492239
-                });
-                }, 3000);
-              
+
             });
 
         var asBenefit = function(benefit) {
@@ -119,6 +97,15 @@ angular.module('ResultCtrl', ['nvd3'])
             }
             return -1;
         };
+        $scope.updateBenefits = function(suppList) {
+            suppList.forEach(function(supp) {
+                $scope.formattedBenefits.push({
+                    key: supp.name,
+                    values: supp.benefits
+                });
+            });
+
+        };
         $scope.updateWithJournalValues = function(journalEntries) {
             $scope.supps.forEach(function(supp) {
                 var newBenefits = [];
@@ -131,67 +118,8 @@ angular.module('ResultCtrl', ['nvd3'])
                 });
                 supp.benefits = newBenefits;
             });
+            $scope.updateBenefits($scope.supps);
         };
-
-//        $scope
-
-    })
-    .directive('barsChart', function() {
-        return {
-            restrict: 'E',
-            //this is important,
-            //we don't want to overwrite our directive declaration
-            //in the HTML mark-up
-            replace: false,
-            //our data source would be an array
-            //passed thru chart-data attribute
-            scope: {data: '=chartData'},
-            link: function(scope, element, attrs) {
-                var chart = d3.select(element[0])
-                    .append("div").attr("class", "chart");
-
-                scope.$watch('data', function(newVal, oldVal) {
-                    console.log("data updated");
-                    var barGraph = chart
-                        .selectAll('div')
-                        .data(newVal);
-
-                    var scoreAsPercent = function(score) {
-                        var maxScore = 5;
-                        var percentage = score / 5;
-                        return percentage * 100;
-                    };
-                    var barText = function(d) {
-                        return d.description + " : " + scoreAsPercent(d.score).toFixed(0) + "%";
-                    };
-                    var barStyle = function(d) {
-                        return scoreAsPercent(d.score) + "%";
-                    };
-
-                    barGraph.enter()
-                        .append("div")
-                        .transition().ease("elastic")
-                        .style("width", function(d) {
-                            return barStyle(d);
-                        })
-                        .text(function(d) {
-                            return barText(d);
-                        });
-
-                    barGraph
-                        .transition().ease("elastic")
-                        .style("width", function(d) {
-                            return barStyle(d);
-                        })
-                        .text(function(d) {
-                            return barText(d);
-                        });
-
-                    barGraph
-                        .exit()
-                        .remove();
-                })
-            }}
     })
     .directive('multiLineGraph', function() {
         return {
