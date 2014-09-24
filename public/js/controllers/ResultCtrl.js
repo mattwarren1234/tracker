@@ -17,6 +17,9 @@ angular.module('ResultCtrl', ['nvd3'])
                 y: function(d) {
                     return d.score;
                 },
+                margin: {
+                    left: 200
+                },
                 "showControls": false,
                 "showValues": true,
                 "transitionDuration": 500,
@@ -24,7 +27,7 @@ angular.module('ResultCtrl', ['nvd3'])
                     "showMaxMin": true
                 },
                 "yAxis": {
-                    "axisLabel": "Average Score"
+                    "axisLabel": "Average Scores"
                 }}
 
         };
