@@ -63,7 +63,8 @@ angular.module('SuppCtrl', [])
                         return currBenefit.description !== $scope.newBenefit.description;
                     };
                     $scope.addBenefit = function() {
-                        if ($scope.newBenefit.description !== "") {{
+                        if ($scope.newBenefit.description !== "") {
+                            {
                                 $scope.supp.benefits.push({description: $scope.newBenefit.description});
                             }
                             $scope.newBenefit.description = "";
@@ -77,6 +78,36 @@ angular.module('SuppCtrl', [])
                             .success(function(data) {
                                 $scope.$parent.refreshList();
                             });
+                    };
+
+                    $scope.deleteBenefit = function(item) {
+                        console.log(item);
+
+                        var benefits = $scope.$parent.supp.benefits;
+                        for (var i = 0; i < benefits.length; i++) {
+                            if (item._id === benefits[i]._id) {
+                                benefits.splice(i, 1);
+                                break;
+                            }
+                        }
+                        Supps.update($scope.$parent.supp)
+                            .success(function(data) {
+                                console.log(data);
+                                //not doing anything witfh data, b/c it should already match client side!
+//                                $scope.setEdit({})1;
+                                $scope.windowMessage.text = "Item updated!";
+                                setTimeout($scope.clearWindowMessage, 2500);
+                            })
+                            .error(function(data) {
+                                console.log(data);
+                            });
+
+                        //      if (!confirm("Are you sure you want to delete this item?"))return;
+//                        Supps.delete(item._id)
+//                            .success(function(data) {
+//                                $scope.$parent.refreshList();
+//                            });
+
                     };
                     $scope.isNewObject = function(item) {
                         return item._id == undefined; //if id is set, is from server.

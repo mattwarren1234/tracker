@@ -1,8 +1,7 @@
 <div class="jumbotron text-center">
-    <h1>Journal</h1>
+    <h2>Journal Entry: {{currentDate| date : 'longDate'}}</h2>
     <div>
-        <p>{{currentDate| date : 'longDate'}}</p>
-        <p>Day <strong>{{journalIndex + 1}}</strong> of <strong>30</strong></p>
+        <!--<p>Day <strong>{{journalIndex + 1}}</strong> of <strong>30</strong></p>-->
         <h5><a href="" ng-show="currentDate.getTime() !== todayFormatted.getTime()" ng-click="goToToday()">(go to today)</a></h5>
         <br />
         <a href="" ng-click="previousDay()" class="glyphicon glyphicon-chevron-left" style="float: left; text-decoration : none; font-size:30px"></a>

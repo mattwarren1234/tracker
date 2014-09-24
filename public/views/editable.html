@@ -47,8 +47,13 @@
         <h3>Benefits</h3>
         <ul>
             <span ng-repeat="benefit in supp.benefits track by $index">
-                <!--{{benefit.text}}-->
-                <input class="form-control" ng-model="benefit.description" type="text" placeholder="why">
+                <div class="input-group">
+                    <!--{{benefit.text}}-->
+                    <input class="form-control" ng-model="benefit.description" type="text" placeholder="ie. Increases mental acuity">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="deleteBenefit(benefit)">Delete benefit</button>
+                    </span>
+                </div>
             </span>
             <!--Already existing benefits-->
             <!--add new benefit to new item-->

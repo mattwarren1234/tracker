@@ -75,7 +75,7 @@ module.exports = function(app, router) {
         JournalEntry.aggregate(
             [
                 {$match: {userId: userId}},
-                {$sort : {date: 1}},
+                {$sort: {date: 1}},
                 {$group: {
                         _id: "$benefitId",
                         scores: {$push:
@@ -89,7 +89,7 @@ module.exports = function(app, router) {
                 {
                     res.send(err);
                 }
-                res.json(results); 
+                res.json(results);
             });
     });
     app.delete('/api/supps/:supp_id', function(req, res) {
@@ -111,8 +111,8 @@ module.exports = function(app, router) {
         var id = req.params.supp_id;
         Supp.findByIdAndUpdate(id, {$set: supp_data}, function(err, supp) {
             if (err)
-                return handleError(err);
-            res.send(supp);
+                res.send(err);
+            res.json(supp);
         });
     });
     app.post('/api/supps', function(req, res) {

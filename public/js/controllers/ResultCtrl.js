@@ -1,5 +1,5 @@
 "use strict";
-angular.module('ResultCtrl', [])
+angular.module('ResultCtrl',  ['nvd3'])
     .controller('ResultController', function($scope, Supps, Journal) {
         $scope.supps = [];
         $scope.userId = 2;
