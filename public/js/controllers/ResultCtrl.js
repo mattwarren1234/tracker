@@ -1,11 +1,50 @@
 "use strict";
-angular.module('ResultCtrl',  ['nvd3'])
+angular.module('ResultCtrl', ['nvd3'])
     .controller('ResultController', function($scope, Supps, Journal) {
         $scope.supps = [];
         $scope.userId = 2;
         $scope.overTimeList = [];
         $scope.tab = {};
         $scope.tab.comparisonActive = true;
+
+        $scope.testD3Data = $scope.data = [
+            {
+                "key": "Series1",
+                "color": "#d62728",
+                "values": [
+                    {
+                        "label": "Group A",
+                        "value": -1.8746444827653
+                    },
+                    {
+                        "label": "Group B",
+                        "value": -8.0961543492239
+                    }
+                ]
+            },
+        ];
+
+        $scope.barOptions = {
+            chart: {
+                "type": "multiBarHorizontalChart",
+                "height": 300,
+                x: function(d) {
+                    return d.label;
+                },
+                y: function(d) {
+                    return d.value;
+                },
+                "showControls": false,
+                "showValues": true,
+                "transitionDuration": 500,
+                "xAxis": {
+                    "showMaxMin": false
+                },
+                "yAxis": {
+                    "axisLabel": "Values"
+                }}
+
+        };
         $scope.showLineGraph = function(supp) {
             Journal.overTime(
                 {userId: $scope.userId,
@@ -59,6 +98,13 @@ angular.module('ResultCtrl',  ['nvd3'])
                 });
                 $scope.supps = suppList;
                 $scope.getAverageValues();
+                setTimeout(function(){
+                      $scope.testD3Data[0].values.push({
+                    "label": "Group NEW",
+                    "value": -8.0961543492239
+                });
+                }, 3000);
+              
             });
 
         var asBenefit = function(benefit) {
@@ -86,6 +132,9 @@ angular.module('ResultCtrl',  ['nvd3'])
                 supp.benefits = newBenefits;
             });
         };
+
+//        $scope
+
     })
     .directive('barsChart', function() {
         return {
@@ -231,7 +280,7 @@ angular.module('ResultCtrl',  ['nvd3'])
                             var newOpacity = active ? 0 : 1;
                             if (newOpacity === 0) {
                                 console.log("fading out, fadin bruh for " + index);
-                            }else{
+                            } else {
                                 console.log("new opacity is ! " + index);
                             }
                             console.log('searching for tag' + index);

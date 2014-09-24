@@ -1,17 +1,17 @@
 <div class="jumbotron text-center"> 
     <h3>Results</h3>
     <div ng-repeat="item in overTimeList">
-        <multi-line-graph chart-data="item"/>
+        <!--<multi-line-graph chart-data="item"/>-->
     </div>
     <ul class="nav nav-tabs">
         <li active="true" ng-click=""><a href="">Comparison</a></li>
         <li ng-repeat="supp in supps"><a href="" ng-click="showLineGraph(supp)">{{supp.name}}</a></li>
     </ul>
+    <nvd3 options="barOptions" data="testD3Data"></nvd3>
     <div class="center-block">
         <div ng-repeat="supp in supps">
             <h2> {{supp.name}} : Average noted benefit</h2>
-            <bars-chart chart-data="supp.benefits"></bars-chart>
+            <!--            <bars-chart chart-data="supp.benefits"></bars-chart>-->
         </div>
-        <line-graph chart-data=""></line-graph>
     </div>
 </div>
