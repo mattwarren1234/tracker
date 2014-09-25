@@ -3,7 +3,7 @@ angular.module('ResultCtrl', ['nvd3'])
     .controller('ResultController', function($scope, Supps, Journal) {
         $scope.supps = [];
         $scope.userId = 2;
-        $scope.overTimeList = [];
+        $scope.overTimeData = [];
         $scope.tab = {};
         $scope.tab.comparisonActive = true;
         $scope.formattedBenefits = [];
@@ -118,8 +118,7 @@ angular.module('ResultCtrl', ['nvd3'])
                             item.name = "Benefit " + index;
                         }
                     });
-                    $scope.overTimeList = [data]
-//                    $scope.overTimeList.push(data);
+                    $scope.overTimeData = [data]
                 });
         };
 
@@ -161,12 +160,7 @@ angular.module('ResultCtrl', ['nvd3'])
                 $scope.supps = suppList;
                 $scope.getAverageValues();
             });
-
-        var asBenefit = function(benefit) {
-            return {_id: benefit._id,
-                score: benefit.avgScore};
-        };
-        var journalValue = function(benefitId, journalEntries) {
+        $scope.journalValue = function(benefitId, journalEntries) {
             for (var i = 0; i < journalEntries.length; i++) {
                 if (journalEntries[i].benefitId === benefitId) {
                     return journalEntries[i].score;
@@ -187,7 +181,7 @@ angular.module('ResultCtrl', ['nvd3'])
             $scope.supps.forEach(function(supp) {
                 var newBenefits = [];
                 supp.benefits.forEach(function(benefit) {
-                    var newScore = journalValue(benefit._id, journalEntries);
+                    var newScore = $scope.journalValue(benefit._id, journalEntries);
                     if (newScore !== -1) {
                         benefit.score = newScore;
                     }

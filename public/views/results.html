@@ -8,4 +8,6 @@
         <li ng-repeat="supp in supps"><a href="" ng-click="showLineGraph(supp)">{{supp.name}}</a></li>
     </ul>
     <nvd3 options="barOptions" data="formattedBenefits"></nvd3>
+    <nvd3 options="lineOptions" data="overTime"></nvd3>
+
 </div>
