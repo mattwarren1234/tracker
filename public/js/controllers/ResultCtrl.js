@@ -15,7 +15,7 @@ angular.module('ResultCtrl', ['nvd3'])
                     return d.description;
                 },
                 y: function(d) {
-                    return d.score;
+                    return (d.score / 5) * 100;
                 },
                 margin: {
                     left: 200
@@ -31,6 +31,81 @@ angular.module('ResultCtrl', ['nvd3'])
                 }}
 
         };
+        $scope.lineOptions = {
+            chart: {
+                type: 'cumulativeLineChart',
+                height: 300,
+                margin: {
+                    top: 20,
+                    right: 20,
+                    bottom: 60,
+                    left: 65
+                },
+                x: function(d) {
+                    return d[0];
+                },
+                y: function(d) {
+                    return d[1] / 100;
+                },
+                average: function(d) {
+                    return d.mean / 100;
+                },
+                color: d3.scale.category10().range(),
+                transitionDuration: 300,
+                useInteractiveGuideline: true,
+                clipVoronoi: false,
+                xAxis: {
+                    axisLabel: 'X Axis',
+                    tickFormat: function(d) {
+                        return d3.time.format('%m/%d/%y')(new Date(d))
+                    },
+                    showMaxMin: false,
+                    staggerLabels: true
+                },
+                yAxis: {
+                    axisLabel: 'Y Axis',
+                    tickFormat: function(d) {
+                        return d3.format(',.1%')(d);
+                    },
+                    axisLabelDistance: 20
+                }
+            }
+        };
+//        d3.
+//            .selectAll('text')
+//            .each(function(d, i) {
+//                insertLinebreaks(this, d, x1.rangeBand() * 2);
+//            });
+
+        $scope.insertLinebreaks = function(d) {
+            var el = d3.select(this);
+            var words = d.split(" ");
+            el.text('');
+
+            for (var i = 0; i < words.length; i++) {
+                var tspan = el.append('tspan').text(words[i]);
+                if (i > 0)
+                    tspan.attr('x', 0).attr('dy', '15');
+            }
+        };
+        $scope.updateLabels = function() {
+            d3.selectAll('.nv-axisMaxMin').each($scope.insertLinebreaks);
+
+        };
+//        $scope.insertLinebreaks = function(textElement, content, width) {
+//            var el = d3.select(textElement);
+//            var p = d3.select(textElement.parentNode);
+//            p.append("foreignObject")
+//                .attr('x', -width / 2)
+//                .attr("width", width)
+//                .attr("height", 200)
+//                .append("xhtml:p")
+//                .attr('style', 'word-wrap: break-word; text-align:center;')
+//                .html(content);
+//
+//            el.remove();
+//
+//        };
         $scope.showLineGraph = function(supp) {
             Journal.overTime(
                 {userId: $scope.userId,
@@ -85,7 +160,6 @@ angular.module('ResultCtrl', ['nvd3'])
                 });
                 $scope.supps = suppList;
                 $scope.getAverageValues();
-
             });
 
         var asBenefit = function(benefit) {
@@ -122,121 +196,7 @@ angular.module('ResultCtrl', ['nvd3'])
                 supp.benefits = newBenefits;
             });
             $scope.updateBenefits($scope.supps);
-        };
-    })
-    .directive('multiLineGraph', function() {
-        return {
-            restrict: 'E',
-            replace: false,
-            scope: {data: '=chartData'},
-            link: function(scope, element, attrs) {
-                var items = scope.data;
-                var parseDate = function(dateString) {
-                    return new Date(dateString);
-                };
-                //stating what our range is going to be - so x min will map to 0, x max will map to width. note that we haven't yet stated what our max values will be.
-//                var elWidth
-                var margin = {top: 30, right: 20, bottom: 70, left: 50},
-                width = 600 - margin.left - margin.right,
-                    height = 300 - margin.top - margin.bottom;
-//                var width = element.parent()[0].offsetWidth * .9;// + 'px'
-//                var height = 0;
-//                var parentHeight = element.parent()[0].offsetHeight * 0.9;
-//                if (parentHeight === 0) {
-//                    height = 200;//+ 'px';
-//                } else {
-//                    height = parentHeight;
-//                }
-                var x = d3.time.scale().range([0, width]);
-                var y = d3.scale.linear().range([height, 0]);
-                var xAxis = d3.svg.axis().scale(x)
-                    .orient("bottom").ticks(10);
 
-                var yAxis = d3.svg.axis().scale(y)
-                    .orient("left").ticks(5);
-
-                var scoreline = d3.svg.line()
-                    .x(function(d) {
-                        return x(d.date);
-                    })
-                    .y(function(d) {
-                        return y(d.score);
-                    });
-//                var svg = d3.select(element[0])
-//                    .append("svg")
-//                    .attr("width", width)// + margin.left + margin.right)
-//                    .append("g");
-
-                var svg = d3.select(element[0])
-                    .append("svg")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                    .append("g")
-                    .attr("transform",
-                        "translate(" + margin.left + "," + margin.top + ")");
-//                items
-                var color = d3.scale.category10();
-                var legendSpace = width / items.length;
-                items.forEach(function(benefit, index) {
-                    //  d.date = parseDate(d.date);
-                    // d.score = +d.score;
-                    benefit.scores.forEach(function(item) {
-                        item.date = parseDate(item.date);
-                        item.score = +item.score;
-                    });
-                    x.domain(d3.extent(benefit.scores, function(d) {
-                        return d.date;
-                    }));
-                    y.domain([0, d3.max(benefit.scores, function(d) {
-                            return d.score;
-                        }) + 1]);
-                    svg.append("path")
-                        .attr("class", "line")
-                        .style("stroke", function() {
-                            return benefit.color = color(index);
-                        })
-                        .attr('id', ("tag" + index))
-                        .attr("d", scoreline(benefit.scores));
-
-                    svg.append("text")                                    // *******
-                        .attr("x", (legendSpace / 2) + index * legendSpace) // spacing // ****
-                        .attr("y", height + (margin.bottom / 2) + 5)         // *******
-                        .attr("class", "legend")    // style the legend   // *******
-                        .style("fill", function() { // dynamic colours    // *******
-                            return benefit.color = color(index);
-                        })             // *******
-                        .text(benefit.name)
-                        .on("click", function() {
-                            var active = benefit.active ? false : true;
-                            var newOpacity = active ? 0 : 1;
-                            if (newOpacity === 0) {
-                                console.log("fading out, fadin bruh for " + index);
-                            } else {
-                                console.log("new opacity is ! " + index);
-                            }
-                            console.log('searching for tag' + index);
-                            d3.select("#tag" + index)
-                                .transition().duration(100)          // ************
-                                .style("opacity", newOpacity);       // ************
-                            // Update whether or not the elements are active
-                            benefit.active = active;
-                        })
-                        ;
-                });
-                svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + height + ")") //move it down to the bottom!
-                    .call(xAxis);
-
-                svg.append("g")
-                    .attr("class", "y axis")
-                    .call(yAxis);
-
-                scope.$watch('data', function(newVal, oldVal) {
-                    return;
-                });
-
-            }
         };
     });
              
