@@ -180,8 +180,11 @@ angular.module('ResultCtrl', ['nvd3'])
 
         $scope.getBenefitName = function(benefitId) {
             for (var i = 0; i < $scope.supps.length; i++) {
-                if ($scope.supps._id === benefitId) {
-                    return $scope.supps[i].name;
+                var benefits = $scope.supps[i].benefits;
+                for (var j = 0; j < benefits.length; j++) {
+                    if (benefits[j]._id === benefitId) {
+                        return benefits[j].description;
+                    }
                 }
             }
             return "";
