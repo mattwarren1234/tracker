@@ -33,16 +33,14 @@ module.exports = function(app, router) {
         console.log('user id is ' + userId);
         var query = {
             date: currentDate,
-            benefitId: benefit.id,
+            benefitId: benefit.benefitId,
             userId: userId,
         };
         var error = {};
         console.log("updating now!");
         JournalEntry.update(query, {"$set": {score: benefit.score}}, {upsert: true},
         function(err, numAffected) {
-            console.log(err);
-            console.log("Number affected:");
-            console.log(numAffected);
+            console.log("Rows affected:" + numAffected);
             error = err;
         });
         if (error !== {}) {

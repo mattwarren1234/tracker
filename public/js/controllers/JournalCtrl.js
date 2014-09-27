@@ -7,9 +7,14 @@ angular.module('JournalCtrl', [])
         $scope.supps = [];
         $scope.journalIndex = 0;
         $scope.userId = 2;
+        $scope.benefitAsJournalEntry = function(benefit){
+            return {
+                benefitId : benefit._id,
+                score : benefit.score
+            };
+        };
+        
         $scope.saveBenefits = function(updatedBenefit) {
-            //updatedBenefit.score
-            //updatedBenefit.id
             Journal.save({
                 date: $scope.currentDate,
                 benefit: updatedBenefit,
@@ -18,10 +23,11 @@ angular.module('JournalCtrl', [])
             //save all the other benefits
             $scope.supps.forEach(function(supp) {
                 supp.benefits.forEach(function(benefit) {
-                    if (benefit._id !== updatedBenefit._id) {
+                    benefit = $scope.benefitAsJournalEntry(benefit);
+                    if (benefit.benefitId !== updatedBenefit.benefitId) {
                         Journal.save({
                             date: $scope.currentDate,
-                            benefit: benefit,
+                            benefit: benefit.benefitId,
                             userId: $scope.userId
                         });
                     }
@@ -108,7 +114,7 @@ angular.module('JournalCtrl', [])
                     $(element).raty('score', value);
                 });
                 scope.onClick = function(score, event) {
-                    var benefit = {_id: element.scope().benefit._id,
+                    var benefit = {benefitId: element.scope().benefit._id,
                         score: score};
                     scope.saveBenefits(benefit);
                 };
