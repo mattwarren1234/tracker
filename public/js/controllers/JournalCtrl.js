@@ -7,6 +7,28 @@ angular.module('JournalCtrl', [])
         $scope.supps = [];
         $scope.journalIndex = 0;
         $scope.userId = 2;
+        $scope.saveBenefits = function(updatedBenefit) {
+            //updatedBenefit.score
+            //updatedBenefit.id
+            Journal.save({
+                date: $scope.currentDate,
+                benefit: updatedBenefit,
+                userId: $scope.userId
+            });
+            //save all the other benefits
+            $scope.supps.forEach(function(supp) {
+                supp.benefits.forEach(function(benefit) {
+                    if (benefit._id !== updatedBenefit._id) {
+                        Journal.save({
+                            date: $scope.currentDate,
+                            benefit: benefit,
+                            userId: $scope.userId
+                        });
+                    }
+                });
+            });
+            console.log("You've got what you wanted! You got what you always wanted.");
+        };
         var journalValue = function(benefitId, journalEntries) {
             for (var i = 0; i < journalEntries.length; i++) {
                 if (journalEntries[i].benefitId === benefitId) {
@@ -67,35 +89,41 @@ angular.module('JournalCtrl', [])
             $scope.getTodaysJournal();
         };
     })
-    
+
     .directive('star', function(Journal) {
         return {
             restrict: 'AEC',
             scope: {
                 score: '=',
-                date: '='
+                date: '=',
+                saveBenefits: '='
+
             },
             link: function(scope, element, attrs) {
-                scope.date = scope.$parent.currentDate;
                 scope.benefitNames = scope.$parent.benefitNames;
-                scope.userId = scope.$parent.userId;
                 var starNumberConverter = function(value) {
                     return (value * 10) / 2;
                 };
                 scope.$watch("score", function(value) {
                     $(element).raty('score', value);
-                })
+                });
                 scope.onClick = function(score, event) {
-                    var benefit = {id: element.scope().benefit._id,
+                    var benefit = {_id: element.scope().benefit._id,
                         score: score};
-                    Journal.save({
-                        date: element.scope().date,
-                        benefit: benefit,
-                        userId: element.scope().userId
-                    }).success(function(data) {
-                        console.log(data);
-                    });
+                    scope.saveBenefits(benefit);
                 };
+
+//                scope.onClick = function(score, event) {
+//                    //instead - save all!
+////                    
+////                    var benefit = {id: element.scope().benefit._id,
+////                       };
+////                    Journal.save({
+////                        date: element.scope().date,
+////                        benefit: benefit,
+////                        userId: element.scope().userId
+////                    });
+//                };
                 $(element).raty(
                     {
                         starType: 'i',
