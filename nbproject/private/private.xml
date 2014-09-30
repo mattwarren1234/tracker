@@ -5,8 +5,8 @@
         <group>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/views/home.html</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/js/controllers/ResultCtrl.js</file>
-            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/js/controllers/JournalCtrl.js</file>
-            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/views/journal.html</file>
+            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/views/results.html</file>
+            <file>file:/Users/mattwarren/Sites/TrackerFromScratch/public/index.html</file>
             <file>file:/Users/mattwarren/Sites/TrackerFromScratch/app/routes.js</file>
         </group>
     </open-files>

@@ -4,10 +4,10 @@
         <!--<multi-line-graph chart-data="item"/>-->
     </div>
     <ul class="nav nav-tabs">
-        <li active="true" ng-click=""><a href="">Comparison</a></li>
+        <li active="true" ng-click="lineChartActive = false"><a href="">Comparison</a></li>
         <li ng-repeat="supp in supps"><a href="" ng-click="showLineGraph(supp)">{{supp.name}}</a></li>
     </ul>
-    <nvd3 options="barOptions" data="formattedBenefits"></nvd3>
-    <nvd3 options="lineOptions" data="overTime"></nvd3>
+    <nvd3 ng-hide="lineChartActive" options="barOptions" data="formattedBenefits"></nvd3>
+    <nvd3 ng-show="lineChartActive"  options="lineOptions" data="overTime"></nvd3>
 
 </div>

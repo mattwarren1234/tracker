@@ -7,84 +7,51 @@ angular.module('ResultCtrl', ['nvd3'])
         $scope.tab = {};
         $scope.tab.comparisonActive = true;
         $scope.formattedBenefits = [];
+        $scope.lineChartActive = false;
         $scope.lineOptions = {
             chart: {
-                type: 'cumulativeLineChart',
+                type: 'lineChart',
                 height: 300,
                 margin: {
                     top: 20,
                     right: 20,
                     bottom: 60,
-                    left: 65
+                    left: 80
                 },
                 x: function(d) {
-//                    console.log(d.date);
                     return new Date(d.date);
                 },
                 y: function(d) {
-                    return d.score;
+                    return $scope.scoreAsPercent(d.score);
                 },
                 color: d3.scale.category10().range(),
                 transitionDuration: 300,
                 useInteractiveGuideline: true,
                 clipVoronoi: false,
                 xAxis: {
-                    axisLabel: 'X Axis',
+                    axisLabel: 'Scores over Time',
                     tickFormat: function(d) {
-                        console.log("tickformat input data is " + d);
                         return d3.time.format('%m/%d/%y')(new Date(d))
                     },
                     showMaxMin: false,
                     staggerLabels: true
                 },
                 yAxis: {
-                    axisLabel: 'Y Axis',
+                    axisLabel: 'Score (%)',
                     tickFormat: function(d) {
-                        return "test: " + d3.format(',.1%')(d);
+                        return d + "%";
+                        return d3.format('%')(d);
                     },
-                    axisLabelDistance: 20
+                    showMaxMin: false,
                 }
             }
         };
-        $scope.lineOptionsOld = {
-            chart: {
-                type: 'cumulativeLineChart',
-                height: 450,
-                margin: {
-                    top: 20,
-                    right: 20,
-                    bottom: 60,
-                    left: 65
-                },
-                x: function(d) {
-                    return d[0];
-                },
-                y: function(d) {
-                    return d[1] / 100;
-                },
-//                average: function(d) { return d.mean/100; },
+        $scope.scoreAsPercent = function(score) {
+            //score range : 1..5
+            //Covert 1..5 rating to percentage rating.
+            return (score / 5) * 100;
+        }
 
-                color: d3.scale.category10().range(),
-                transitionDuration: 300,
-                useInteractiveGuideline: true,
-                clipVoronoi: false,
-                xAxis: {
-                    axisLabel: 'X Axis',
-                    tickFormat: function(d) {
-                        return d3.time.format('%m/%d/%y')(new Date(d))
-                    },
-                    showMaxMin: false,
-                    staggerLabels: true
-                },
-                yAxis: {
-                    axisLabel: 'Y Axis',
-                    tickFormat: function(d) {
-                        return d3.format(',.1%')(d);
-                    },
-                    axisLabelDistance: 20
-                }
-            }
-        };
         $scope.barOptions = {
             chart: {
                 "type": "multiBarHorizontalChart",
@@ -93,7 +60,7 @@ angular.module('ResultCtrl', ['nvd3'])
                     return d.description;
                 },
                 y: function(d) {
-                    return (d.score / 5) * 100;
+                    return $scope.scoreAsPercent(d.score);
                 },
                 margin: {
                     left: 200
@@ -107,18 +74,11 @@ angular.module('ResultCtrl', ['nvd3'])
                 "yAxis": {
                     "axisLabel": "Average Scores",
                     tickFormat: function(d) {
-                        console.log("bar graph d " + d);
                         return d + "%";
                     }
                 }}
 
         };
-
-//        d3.
-//            .selectAll('text')
-//            .each(function(d, i) {
-//                insertLinebreaks(this, d, x1.rangeBand() * 2);
-//            });
 
         $scope.insertLinebreaks = function(d) {
             var el = d3.select(this);
@@ -135,20 +95,6 @@ angular.module('ResultCtrl', ['nvd3'])
             d3.selectAll('.nv-axisMaxMin').each($scope.insertLinebreaks);
 
         };
-//        $scope.insertLinebreaks = function(textElement, content, width) {
-//            var el = d3.select(textElement);
-//            var p = d3.select(textElement.parentNode);
-//            p.append("foreignObject")
-//                .attr('x', -width / 2)
-//                .attr("width", width)
-//                .attr("height", 200)
-//                .append("xhtml:p")
-//                .attr('style', 'word-wrap: break-word; text-align:center;')
-//                .html(content);
-//
-//            el.remove();
-//
-//        };
         $scope.overTimeAdapter = function(item) {
             var formattedData = [];
             item.forEach(function(current) {
@@ -162,9 +108,14 @@ angular.module('ResultCtrl', ['nvd3'])
             return formattedData;
         }
         $scope.showLineGraph = function(supp) {
+            $scope.lineChartActive = true;
+            var benefitIds = supp.benefits.map(function(benefit) {
+                console.log("benefit id " + benefit._id);
+                return benefit._id;
+            });
             Journal.overTime(
                 {userId: $scope.userId,
-                    suppId: supp._id}
+                    benefitIds: benefitIds}
             )
                 .success(function(data) {
                     data.forEach(function(item, index) {
@@ -173,7 +124,7 @@ angular.module('ResultCtrl', ['nvd3'])
                             item.name = "Benefit " + index;
                         }
                     });
-                    $scope.overTimeData = [data]
+                    $scope.overTimeData = [data];
                     $scope.overTime = $scope.overTimeAdapter($scope.overTimeData[0]);
                 });
         };

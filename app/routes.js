@@ -1,8 +1,11 @@
 var Supp = require('./models/supp');
 var JournalEntry = require('./models/journal');
+var mongoose = require('mongoose');
+//var id = mongoose.Types.ObjectId();
+
 module.exports = function(app, router) {
     app.get('/api/supps', function(req, res) {
-        //use mongoose : find all nerds in db
+//use mongoose : find all nerds in db
         Supp.find(function(err, supps) {
             if (err)
                 res.send(err);
@@ -69,10 +72,23 @@ module.exports = function(app, router) {
     });
     app.get('/api/records/overTime', function(req, res) {
         var userId = parseInt(req.query.userId, 10);
-        var suppId = req.query.suppId;
+        var benefitIds = req.query.benefitIds;
+//        console.log(benefitIds);
+        console.log("benefitIds");
+        console.log(Array.isArray(benefitIds));
+        if (!Array.isArray(benefitIds)) {
+            benefitIds = [benefitIds];
+        }
+        var convertedIds = benefitIds.map(function(benefit) {
+            return  mongoose.Types.ObjectId(benefit);
+        });
         JournalEntry.aggregate(
             [
-                {$match: {userId: userId}},
+                {$match: {$and: [
+                            {userId: userId},
+                            {benefitId: {$in: convertedIds}}
+                        ]}
+                },
                 {$sort: {date: 1}},
                 {$group: {
                         _id: "$benefitId",
@@ -80,14 +96,16 @@ module.exports = function(app, router) {
                                 {score: "$score",
                                     date: "$date"}}
                     }
-                },
+                }
             ],
             function(err, results) {
                 if (err)
                 {
                     res.send(err);
+                } else {
+                    console.log("results " + results);
+                    res.json(results);
                 }
-                res.json(results);
             });
     });
     app.delete('/api/supps/:supp_id', function(req, res) {

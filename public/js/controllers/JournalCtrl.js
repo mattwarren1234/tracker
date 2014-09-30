@@ -1,6 +1,5 @@
 angular.module('JournalCtrl', [])
     .controller('JournalController', function($scope, $timeout, Supps, Journal) {
-//        $scope.currentDate = new Date();
         var today = new Date();
         $scope.todayFormatted = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         $scope.currentDate = new Date($scope.todayFormatted);
