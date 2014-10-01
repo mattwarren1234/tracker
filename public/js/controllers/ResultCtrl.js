@@ -8,6 +8,8 @@ angular.module('ResultCtrl', ['nvd3'])
         $scope.tab.comparisonActive = true;
         $scope.formattedBenefits = [];
         $scope.lineChartActive = false;
+        $scope.line = {};
+        $scope.line.savedTicks = [];
         $scope.lineOptions = {
             chart: {
                 type: 'lineChart',
@@ -31,7 +33,8 @@ angular.module('ResultCtrl', ['nvd3'])
                 xAxis: {
                     axisLabel: 'Scores over Time',
                     tickFormat: function(d) {
-                        return d3.time.format('%m/%d/%y')(new Date(d))
+                        var formattedDate = d3.time.format('%m/%d/%y')(new Date(d))
+                        return formattedDate;
                     },
                     showMaxMin: false,
                     staggerLabels: true
@@ -39,8 +42,7 @@ angular.module('ResultCtrl', ['nvd3'])
                 yAxis: {
                     axisLabel: 'Score (%)',
                     tickFormat: function(d) {
-                        return d + "%";
-                        return d3.format('%')(d);
+                        return d3.round(d) + "%";
                     },
                     showMaxMin: false,
                 }
@@ -69,12 +71,17 @@ angular.module('ResultCtrl', ['nvd3'])
                 "showValues": true,
                 "transitionDuration": 500,
                 "xAxis": {
+                    tickFormat: function(d) {
+                        return d;
+                    },
                     "showMaxMin": true
+
+
                 },
                 "yAxis": {
                     "axisLabel": "Average Scores",
                     tickFormat: function(d) {
-                        return d + "%";
+                        return d3.round(d) + "%";
                     }
                 }}
 

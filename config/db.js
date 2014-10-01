@@ -1,3 +1,5 @@
 module.exports = {
-	url : 'mongodb://localhost/suppDB'
+    url : process.env.MONGOLAB_URI 
+        || 'mongodb://localhost/suppDB'
+	
 };

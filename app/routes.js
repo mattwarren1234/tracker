@@ -66,16 +66,12 @@ module.exports = function(app, router) {
             function(err, results) {
                 if (err)
                     res.send(err);
-                console.log("success");
                 res.json(results); // [ { maxBalance: 98000 } ]
             });
     });
     app.get('/api/records/overTime', function(req, res) {
         var userId = parseInt(req.query.userId, 10);
         var benefitIds = req.query.benefitIds;
-//        console.log(benefitIds);
-        console.log("benefitIds");
-        console.log(Array.isArray(benefitIds));
         if (!Array.isArray(benefitIds)) {
             benefitIds = [benefitIds];
         }
