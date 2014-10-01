@@ -10,8 +10,8 @@
     "angular-route": "latest",
     "raty": "latest",
     "angular-bootstrap": "~0.11.0",
-    "angular-nvd3": "latest",
-    "nvd3": "~1.1.15-beta"
+    "nvd3": "~1.1.15-beta",
+    "angular-nvd3": "latest"
   },
   "resolutions": {
     "d3": "~3.4"
