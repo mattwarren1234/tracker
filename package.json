@@ -1,13 +1,14 @@
 {
-		"name": "supp-tracker",
-	  "main": "server.js",
-	  "dependencies": {
-	    "express" : "~4.5.1",
-			"mongoose" : "~3.8.0",
-			"body-parser" : "~1.4.2",
-			"method-override" : "~2.0.2"
-	  },
-	 	"engines": {
-		     "node": "0.11.x"
-		}
+  "name": "supp-tracker",
+  "main": "server.js",
+  "dependencies": {
+    "express": "~4.5.1",
+    "mongoose": "~3.8.0",
+    "body-parser": "~1.4.2",
+    "method-override": "~2.0.2",
+    "bower": "^1.3.12"
+  },
+  "engines": {
+    "node": "0.11.x"
+  }
 }
