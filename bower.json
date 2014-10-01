@@ -5,11 +5,15 @@
     "bootstrap": "latest",
     "font-awesome": "latest",
     "animate.css": "latest",
-		"d3": "~3.4",
+    "d3": "~3.4",
     "angular": "latest",
     "angular-route": "latest",
     "raty": "latest",
     "angular-bootstrap": "~0.11.0",
-		"angular-nvd3": "latest"
+    "angular-nvd3": "latest",
+    "nvd3": "~1.1.15-beta"
+  },
+  "resolutions": {
+    "d3": "~3.4"
   }
 }
