@@ -5,6 +5,7 @@
     "bootstrap": "latest",
     "font-awesome": "latest",
     "animate.css": "latest",
+		"d3": "~3.4",
     "angular": "latest",
     "angular-route": "latest",
     "raty": "latest",
