@@ -6,13 +6,13 @@ angular.module('JournalCtrl', [])
         $scope.supps = [];
         $scope.journalIndex = 0;
         $scope.userId = 2;
-        $scope.benefitAsJournalEntry = function(benefit){
+        $scope.benefitAsJournalEntry = function(benefit) {
             return {
-                benefitId : benefit._id,
-                score : benefit.score
+                benefitId: benefit._id,
+                score: benefit.score
             };
         };
-        
+
         $scope.saveBenefits = function(updatedBenefit) {
             Journal.save({
                 date: $scope.currentDate,
@@ -82,6 +82,9 @@ angular.module('JournalCtrl', [])
         $scope.goToToday = function() {
             var today = new Date();
             $scope.currentDate.setDate(today.getDate());
+            $scope.currentDate.setMonth(today.getMonth());
+            $scope.currentDate.setYear(today.getFullYear());
+
             $scope.getTodaysJournal();
         };
         $scope.previousDay = function() {
