@@ -1,3 +1,20 @@
+body {
+  background: #303030;
+  padding: 30px;
+}
+
+.navbar{
+  border-radius: 0px;
+}
+
+.main {
+  border-radius: 0px;
+  background-color: #eee;
+  padding: 30px;
+  maring-bottom:30px;
+}
+
+
 .chart {
     background: #eee;
     padding: 3px;
