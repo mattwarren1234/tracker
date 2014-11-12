@@ -1,10 +1,22 @@
 body {
   background: #303030;
   padding: 30px;
+  padding-bottom: 70px;
+  font-family: Century Gothic, Arial, Courier New, Sans-Serif; 
 }
 
+.footer {
+  background-color: rgba(73, 68, 68, 0.2);
+  text-align: center;
+  color:  #777;
+}
+
+.footer p{
+  color : #777;
+}
 .navbar{
   border-radius: 0px;
+  padding-left: 2em;
 }
 
 .main {
